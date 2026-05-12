@@ -23,6 +23,7 @@
         </div>
 
         <nav class="flex-1 px-4 space-y-2 mt-4">
+            @if(auth()->user()->role == 'user')
             <a href="{{ route('student.home') }}"
                 class="flex items-center p-3 text-white bg-indigo-600 rounded-2xl shadow-lg shadow-indigo-100 transition">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 ml-3" fill="none" viewBox="0 0 24 24"
@@ -42,6 +43,33 @@
                 </svg>
                 <span x-show="open" x-transition class="font-medium">كورساتي</span>
             </a>
+            @endif
+
+            @if(auth()->user()->role == 'instructor')
+
+                  <a href="{{ route('instructor.dashboard') }}"
+                class="flex items-center p-3 text-gray-500 hover:bg-indigo-50 hover:text-indigo-600 rounded-2xl transition">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 ml-3" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.54 1.254 2.576 3.388 2.576 5.899v1.899c-.988-.899-1.988-1.798-3-2.697M7 14l-.846-.846a1 1 0 01-.293-.7V9a1 1 0 01 .293-.7l4 -4a1 1 0 01 .7-.293h4a1"
+                </svg>
+                <span x-show="open" x-transition class="font-medium">لوحة التحكم</span>
+            </a>
+            @endif
+
+            @if(auth()->user()->role == 'admin')
+            <a href="{{ route('admin.dashboard') }}"
+                class="flex items-center p-3 text-gray-500 hover:bg-indigo-50 hover:text-indigo-600 rounded-2xl transition">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 ml-3" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.54 1.254 2.576 3.388 2.576 5.899v1.899c-.988-.899-1.988-1.798-3-2.697M7 14l-.846-.846a1 1 0 01-.293-.7V9a1 1 0 01 .293-.7l4 -4a1 1 0 01 .7-.293h4a1"
+                </svg>
+                <span x-show="open" x-transition class="font-medium">لوحة التحكم</span>
+            </a>
+            @endif
+
 
             <a href="{{ route('profile.show') }}"
                 class="flex items-center p-3 text-gray-500 hover:bg-indigo-50 hover:text-indigo-600 rounded-2xl transition">

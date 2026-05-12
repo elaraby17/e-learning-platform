@@ -1,71 +1,143 @@
 @extends('layouts.master')
 
-@section('title', 'admin Dashboard')
-
+@section('title', 'Admin Dashboard')
 @section('content')
+<div class="min-h-screen bg-[#f8f9fa] p-4 lg:p-10" dir="rtl">
+    <header class="mb-10">
+        <h1 class="text-3xl font-black text-gray-800 family-cairo">لوحة التحكم الإدارية 🛡️</h1>
+        <p class="text-gray-500 mt-1">مرحباً بك مجدداً، إليك ملخص نشاط المنصة بالكامل.</p>
+    </header>
 
-<header class="bg-white border-b border-gray-100 px-8 py-5 flex justify-between items-center sticky top-0 z-30">
-            <div>
-                <h1 class="text-xl font-bold text-gray-800">لوحة التحكم</h1>
-                <p class="text-xs text-gray-400 mt-1">مرحباً بك مجدداً، {{ auth()->user()->name }} 👋</p>
-            </div>
-
-            <div class="flex items-center gap-4">
-                <button class="p-2 text-gray-400 hover:bg-gray-50 rounded-xl relative">
-                    <span class="absolute top-2 left-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-                    </svg>
-                </button>
-                <img src="{{ asset('storage/'.auth()->user()->image) }}" class="w-10 h-10 rounded-xl object-cover border border-gray-100">
-            </div>
-        </header>
-
-        <div class="p-8">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-                <div class="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm flex items-center gap-5">
-                    <div class="w-14 h-14 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253" />
-                        </svg>
-                    </div>
-                    <div>
-                        <p class="text-2xl font-black text-gray-800">08</p>
-                        <p class="text-sm text-gray-400 font-medium">كورس مسجل</p>
-                    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+        <div class="bg-white p-6 rounded-[32px] shadow-sm border border-gray-100 transition-transform hover:scale-105">
+            <div class="flex justify-between items-start mb-4">
+                <div class="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center text-xl">
+                    <i class="fa-solid fa-users"></i>
                 </div>
-
-                <div class="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm flex items-center gap-5">
-                    <div class="w-14 h-14 bg-orange-50 text-orange-500 rounded-2xl flex items-center justify-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                    </div>
-                    <div>
-                        <p class="text-2xl font-black text-gray-800">14</p>
-                        <p class="text-sm text-gray-400 font-medium">ساعة تعليمية</p>
-                    </div>
-                </div>
-
-                <div class="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm flex items-center gap-5">
-                    <div class="w-14 h-14 bg-green-50 text-green-500 rounded-2xl flex items-center justify-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                    </div>
-                    <div>
-                        <p class="text-2xl font-black text-gray-800">03</p>
-                        <p class="text-sm text-gray-400 font-medium">شهادات منجزة</p>
-                    </div>
-                </div>
+                <span class="text-green-500 text-xs font-bold bg-green-50 px-2 py-1 rounded-lg">+12%</span>
             </div>
-
-            <div class="mb-6 flex justify-between items-center">
-                <h2 class="text-lg font-bold text-gray-800">تابع التعلم</h2>
-                <a href="#" class="text-indigo-600 text-sm font-bold hover:underline">مشاهدة الكل</a>
-            </div>
-
-
+            <p class="text-gray-400 font-bold text-xs uppercase tracking-widest">إجمالي المستخدمين</p>
+            <h3 class="text-2xl font-black text-gray-800">{{ $total_users ?? 0 }}</h3>
         </div>
 
+        <div class="bg-white p-6 rounded-[32px] shadow-sm border border-gray-100 transition-transform hover:scale-105">
+            <div class="flex justify-between items-start mb-4">
+                <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center text-xl">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                </div>
+            </div>
+            <p class="text-gray-400 font-bold text-xs uppercase tracking-widest">إجمالي الكورسات</p>
+            <h3 class="text-2xl font-black text-gray-800">{{ $total_courses ?? 0 }}</h3>
+        </div>
+
+        <div class="bg-white p-6 rounded-[32px] shadow-sm border border-gray-100 transition-transform hover:scale-105">
+            <div class="flex justify-between items-start mb-4">
+                <div class="w-12 h-12 bg-purple-50 text-purple-600 rounded-2xl flex items-center justify-center text-xl">
+                    <i class="fa-solid fa-user-plus"></i>
+                </div>
+            </div>
+            <p class="text-gray-400 font-bold text-xs uppercase tracking-widest">إجمالي التسجيلات</p>
+            <h3 class="text-2xl font-black text-gray-800">{{ $total_enrollments ?? 0 }}</h3>
+        </div>
+
+        <div class="bg-white p-6 rounded-[32px] shadow-sm border border-gray-100 transition-transform hover:scale-105">
+            <div class="flex justify-between items-start mb-4">
+                <div class="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center text-xl">
+                    <i class="fa-solid fa-money-bill-trend-up"></i>
+                </div>
+            </div>
+            <p class="text-gray-400 font-bold text-xs uppercase tracking-widest">إجمالي الأرباح</p>
+            <h3 class="text-2xl font-black text-gray-800">${{ number_format($total_revenue ?? 0, 2) }}</h3>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-10">
+        <div class="bg-white rounded-[40px] shadow-sm border border-gray-100 overflow-hidden">
+            <div class="p-6 border-b border-gray-50 flex justify-between items-center">
+                <h2 class="text-xl font-bold text-gray-800">أحدث المسجلين</h2>
+                <a href="#" class="text-indigo-600 text-sm font-bold hover:underline">عرض الكل</a>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-right text-sm">
+                    <thead class="bg-gray-50/50">
+                        <tr>
+                            <th class="p-4 text-gray-500 font-bold">المستخدم</th>
+                            <th class="p-4 text-gray-500 font-bold">التاريخ</th>
+                            <th class="p-4 text-gray-500 font-bold">الدور</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-50">
+                        {{-- @foreach($recent_users as $user)
+                        <tr class="hover:bg-gray-50/30 transition-colors">
+                            <td class="p-4 font-semibold text-gray-700">{{ $user->name }}</td>
+                            <td class="p-4 text-gray-500">{{ $user->created_at->format('Y-m-d') }}</td>
+                            <td class="p-4">
+                                <span class="px-3 py-1 rounded-full text-[10px] font-bold {{ $user->role == 'admin' ? 'bg-red-100 text-red-600' : ($user->role == 'instructor' ? 'bg-blue-100 text-blue-600' : 'bg-gray-100 text-gray-600') }}">
+                                    {{ strtoupper($user->role) }}
+                                </span>
+                            </td>
+                        </tr>
+                        @endforeach --}}
+                            <tr></tr>
+                                <td class="p-4 text-center" colspan="3">
+                                    <p class="text-gray-400 italic">لا يوجد مستخدمين جدد حالياً.</p>
+                                </td>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-[40px] shadow-sm border border-gray-100 overflow-hidden">
+            <div class="p-6 border-b border-gray-50 flex justify-between items-center">
+                <h2 class="text-xl font-bold text-gray-800">أحدث الاشتراكات</h2>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-right text-sm">
+                    <thead class="bg-gray-50/50">
+                        <tr>
+                            <th class="p-4 text-gray-500 font-bold">الطالب</th>
+                            <th class="p-4 text-gray-500 font-bold">الكورس</th>
+                            <th class="p-4 text-gray-500 font-bold text-left">السعر</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-50">
+                        {{-- @foreach($recent_enrollments as $enrollment)
+                        <tr class="hover:bg-gray-50/30 transition-colors">
+                            <td class="p-4 font-semibold text-gray-700">{{ $enrollment->user->name }}</td>
+                            <td class="p-4 text-indigo-600 font-medium">{{ $enrollment->course->title }}</td>
+                            <td class="p-4 text-left font-bold text-gray-800">${{ $enrollment->price }}</td>
+                        </tr>
+                        @endforeach --}}
+                            <tr></tr>
+                                <td class="p-4 text-center" colspan="3">
+                                    <p class="text-gray-400 italic">لا توجد اشتراكات جديدة حالياً.</p>
+                                </td>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-indigo-900 rounded-[40px] p-8 text-white">
+        <h2 class="text-xl font-bold mb-6">روابط سريعة للملحقات</h2>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <a href="#" class="bg-white/10 hover:bg-white/20 p-4 rounded-2xl flex flex-col items-center gap-2 transition-all">
+                <i class="fa-solid fa-user-gear text-xl"></i>
+                <span class="text-sm font-bold">إدارة المستخدمين</span>
+            </a>
+            <a href="#" class="bg-white/10 hover:bg-white/20 p-4 rounded-2xl flex flex-col items-center gap-2 transition-all">
+                <i class="fa-solid fa-layer-group text-xl"></i>
+                <span class="text-sm font-bold">إدارة الكورسات</span>
+            </a>
+            <a href="#" class="bg-white/10 hover:bg-white/20 p-4 rounded-2xl flex flex-col items-center gap-2 transition-all">
+                <i class="fa-solid fa-list-check text-xl"></i>
+                <span class="text-sm font-bold">التصنيفات</span>
+            </a>
+            <a href="#" class="bg-white/10 hover:bg-white/20 p-4 rounded-2xl flex flex-col items-center gap-2 transition-all">
+                <i class="fa-solid fa-gears text-xl"></i>
+                <span class="text-sm font-bold">إعدادات النظام</span>
+            </a>
+        </div>
+    </div>
+</div>
 @endsection
