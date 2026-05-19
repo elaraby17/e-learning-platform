@@ -20,6 +20,9 @@ return new class extends Migration
             $table->enum('role', ['user', 'instructor', 'admin'])->default('user');
             $table->string('image')->nullable();
             $table->text('bio')->nullable();
+            $table->enum('status', ['active', 'inactive'])->default('active');
+            $table->enum('gender', ['male', 'female', 'other'])->nullable();
+            $table->timestamp('last_login_at')->nullable();
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();

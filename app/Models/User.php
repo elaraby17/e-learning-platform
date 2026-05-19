@@ -17,7 +17,7 @@ class User extends Authenticatable
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
 
-    protected $fillable =[
+    protected $fillable = [
         'name',
         'email',
         'phone',
@@ -39,4 +39,18 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function courses()
+    {
+        return $this->hasMany(Course::class, 'instructor_id');
+    }
+
+    public function enrollments()
+    {
+        return $this->hasMany(Enrollment::class, 'student_id');
+    }
+    public function enrolledCourses()
+{
+    return $this->belongsToMany(Course::class, 'enrollments', 'student_id', 'course_id');
+}
 }

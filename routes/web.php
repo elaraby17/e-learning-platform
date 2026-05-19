@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CoursesController;
 use App\Http\Controllers\InstructorController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -19,11 +20,28 @@ Route::prefix('auth')->name('auth.')->middleware('guest')->group(function () {
 
 });
 
-Route::middleware('auth')->group(function () {
+
+
+
+
+Route::prefix('students')->middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
     Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
     Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('password.update.custom');
+
+    Route::post('/courses/{course}/enroll', [ProfileController::class, 'store'])->name('courses.enroll');
+    Route::get('all-courses', [ProfileController::class, 'allCourses'])->name('all-courses');
+    Route::get('courses', [ProfileController::class, 'courses'])->name('courses');
+    Route::get('courses/{course}', [ProfileController::class, 'courseDetails'])->name('course-details');
 });
+
+
+
+
+
+
+
+
 
 Route::middleware('auth', 'role:user')->prefix('student')->name('student.')->group(function () {
     Route::get('/home', [ProfileController::class, 'index'])->name('home');
@@ -31,6 +49,9 @@ Route::middleware('auth', 'role:user')->prefix('student')->name('student.')->gro
 
 Route::middleware('auth', 'role:instructor')->prefix('instructor')->name('instructor.')->group(function () {
     Route::get('/dashboard', [InstructorController::class, 'index'])->name('dashboard');
+
+    Route::get('/courses/create', [CoursesController::class, 'create'])->name('courses.create');
+    Route::post('/courses/store', [CoursesController::class, 'store'])->name('courses.store');
 
 });
 

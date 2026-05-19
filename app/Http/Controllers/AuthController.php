@@ -32,9 +32,13 @@ class AuthController extends Controller
             $data['image'] = $path;
         }
         User::create($data);
-
-        return Auth::attempt($request->only('email', 'password')) ? redirect()->route('student.home')->with('success', 'Registered successfully.') : back()->withErrors(['email' => 'Failed to register. Please try again.']);
+        if (Auth::attempt($request->only('email', 'password'))) {
+            $request->session()->regenerate();
+            return redirect()->route('student.home')->with('success', 'Registered successfully.');
+        }
+        return back()->withErrors(['email' => 'Failed to register. Please try again.']);
     }
+
 
 public function signin(LoginRequest $request)
 {

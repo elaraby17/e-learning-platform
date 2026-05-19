@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
-
+use App\Models\Course;
+use App\Models\Enrollment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rules\Password;
 
@@ -12,7 +14,11 @@ class ProfileController extends Controller
 {
     public function index()
     {
-        return view('students.home');
+        $enrolled_count = auth()->user()->enrollments()->with('course')->get()->count();
+
+        $coursesEnrolled = auth()->user()->enrollments()->with('course')->get();
+
+        return view('students.home', compact('enrolled_count', 'coursesEnrolled'));
     }
 
     public function show()
@@ -26,11 +32,9 @@ class ProfileController extends Controller
 
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,'.$user->id,
             'bio' => 'nullable|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
-
         if ($request->hasFile('image')) {
             if ($user->image && Storage::disk('public')->exists($user->image)) {
                 Storage::disk('public')->delete($user->image);
@@ -47,19 +51,79 @@ class ProfileController extends Controller
     }
 
     public function updatePassword(Request $request)
-{
-    $user = auth()->user();
+    {
+        $user = auth()->user();
 
+        $request->validate([
+            'current_password' => 'required|current_password',
+            'password' => ['required', 'confirmed', Password::defaults()],
+        ]);
 
-    $request->validate([
-        'current_password' => 'required|current_password',
-        'password' => ['required', 'confirmed', Password::defaults()],
-    ]);
+        $user->update([
+            'password' => Hash::make($request->password),
+        ]);
 
-    $user->update([
-        'password' => Hash::make($request->password),
-    ]);
+        return back()->with('status', 'password-updated');
+    }
 
-    return back()->with('status', 'password-updated');
-}
+    public function allCourses()
+    {
+        $user = auth()->user();
+        $courses = Course::with(['instructor', 'category'])->where('status', 'published')->paginate(10);
+
+        return view('students.courses.allCourses', compact('courses'));
+    }
+
+    public function courses()
+    {
+        $user = auth()->user();
+        $courses = Course::whereHas('enrollments', function ($query) use ($user) {
+            $query->where('student_id', $user->id);
+        })->with(['instructor', 'category'])->paginate(10);
+
+        return view('students.courses.courses', compact('courses'));
+    }
+
+    public function store(Course $course)
+    {
+        try {
+            $user = auth()->user();
+            $exists = Enrollment::where('student_id', $user->id)
+                ->where('course_id', $course->id)
+                ->exists();
+
+            if ($exists) {
+                return back()->with('error', 'أنت مشترك بالفعل');
+            }
+
+            Enrollment::create([
+                'student_id' => $user->id,
+                'course_id' => $course->id,
+                'progress_percentage' => 0,
+                'status' => 'active',
+                'enrolled_at' => now(),
+            ]);
+
+            return back()->with('success', 'تم الاشتراك بنجاح');
+        } catch (\Throwable $th) {
+            Log::info('Error enrolling in course: '.$th->getMessage());
+        }
+    }
+
+    public function courseDetails(Course $course)
+    {
+        try {
+            $course = Course::with(
+                'sections.lessons'
+            )->findOrFail($id);
+
+            if (! $enrollment) {
+                return back()->with('error', 'أنت غير مشترك في هذا الكورس');
+            }
+
+            return view('students.courses.courseDetails', compact('course', 'enrollment'));
+        } catch (\Throwable $th) {
+            Log::info('Error fetching course details: '.$th->getMessage());
+        }
+    }
 }

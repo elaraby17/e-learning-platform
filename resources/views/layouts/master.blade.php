@@ -1,37 +1,73 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar" dir="rtl" x-data x-bind:class="$store.theme.dark ? 'dark' : ''">
 
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>LMS @yield('title')</title>
-
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-    <link href="https://fonts.googleapis.com/css2?family=Almarai:wght@300;400;700;800&display=swap" rel="stylesheet">
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@yield('title', 'E Learning Platform')</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        cairo: ['Cairo', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script>
+        document.addEventListener('alpine:init', () => {
+            Alpine.store('theme', {
+                dark: localStorage.getItem('theme') === 'dark',
+                toggle() {
+                    this.dark = !this.dark;
+                    localStorage.setItem('theme', this.dark ? 'dark' : 'light');
+                }
+            });
+        });
+    </script>
+    <style>
+        * {
+            font-family: 'Cairo', sans-serif;
+        }
 
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+        @keyframes float {
 
-    <link rel="stylesheet" href="{{ asset('assets/styles/style.css') }}">
+            0%,
+            100% {
+                transform: translateY(0)
+            }
+
+            50% {
+                transform: translateY(-8px)
+            }
+        }
+
+        .float {
+            animation: float 3s ease-in-out infinite;
+        }
+    </style>
 </head>
 
-<body class="antialiased bg-[#f8fafc] overflow-x-hidden">
+<body class="bg-white dark:bg-slate-900 transition-colors duration-300">
     @auth
         @include('layouts.partials.sidebar')
     @endauth
-    @guest
-        <main class="flex-1 p-8 mt-8">
-            @include('layouts.partials.header')
-            <div class="min-h-screen bg-gray-50/50" dir="rtl">
-                <div class="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm">
-                    @yield('content')
-                </div>
-                @include('layouts.partials.footer')
-        </main>
-    @endguest
 
+    @guest
+        <div class="min-h-screen flex flex-col">
+            @include('layouts.partials.header')
+            <main class="flex-1 p-4">
+                @yield('content')
+            </main>
+            @include('layouts.partials.footer')
+        </div>
+    @endguest
 </body>
 
 </html>
