@@ -57,6 +57,8 @@
 
     {{-- ALERT --}}
     <x-success-component />
+    
+    {{-- <x-error-component /> --}}
 
     {{-- STATS --}}
     <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mb-10">
@@ -252,12 +254,12 @@
 
                             <td class="p-6 text-left flex items-center gap-3">
 
-                                <a href="#"
+                                <a href="{{ route('instructor.courses.edit', $course) }}"
                                     class="px-3 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg text-sm font-bold transition-all">
                                     تعديل
                                 </a>
 
-                                <form action="#"
+                                <form action="{{ route('instructor.courses.destroy', $course) }}"
                                     method="POST"
                                     onsubmit="return confirm('هل أنت متأكد أنك تريد حذف هذا الكورس؟');">
                                     @csrf

@@ -17,7 +17,7 @@
                     سعيد برؤيتك مرة أخرى، لنكمل رحلة التعلم اليوم.
                 </p>
             </div>
-            <a href=""
+            <a href="{{ route('all-courses') }}"
                 class="flex items-center gap-2 px-6 py-3.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-2xl font-bold shadow-lg shadow-indigo-200 dark:shadow-indigo-900/50 hover:-translate-y-0.5 transform transition-all duration-200 text-sm whitespace-nowrap">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -119,7 +119,7 @@
                         <h3 class="font-bold text-slate-600 dark:text-slate-300 mb-2">لا توجد كورسات قيد الدراسة</h3>
                         <p class="text-slate-400 dark:text-slate-500 text-sm mb-6">ابدأ رحلتك التعليمية الآن واختر أول كورس!
                         </p>
-                        <a href=""
+                        <a href="{{ route('all-courses') }}"
                             class="inline-flex items-center gap-2 px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-2xl font-bold text-sm transition shadow-lg shadow-indigo-200 dark:shadow-indigo-900/50">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

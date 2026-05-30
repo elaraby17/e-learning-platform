@@ -4,7 +4,7 @@
 
     <div class="min-h-screen bg-slate-50 dark:bg-slate-900 py-12 px-4 lg:p-12" dir="rtl">
         <div class="max-w-7xl mx-auto">
-
+<x-success-component />
             {{-- ══ Header Section ══ --}}
             <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
                 <div>

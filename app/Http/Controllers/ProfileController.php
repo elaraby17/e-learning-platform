@@ -104,7 +104,7 @@ class ProfileController extends Controller
                 'enrolled_at' => now(),
             ]);
 
-            return back()->with('success', 'تم الاشتراك بنجاح');
+            return redirect()->route('courses')->with('success', 'تم الاشتراك بنجاح');
         } catch (\Throwable $th) {
             Log::info('Error enrolling in course: '.$th->getMessage());
         }
@@ -114,7 +114,7 @@ class ProfileController extends Controller
     {
         try {
             $course = Course::with(
-                'sections.lessons'
+                
             )->findOrFail($id);
 
             if (! $enrollment) {

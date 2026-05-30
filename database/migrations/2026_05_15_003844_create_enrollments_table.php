@@ -24,6 +24,10 @@ return new class extends Migration
 
             $table->decimal('progress_percentage', 5, 2)->default(0);
 
+            $table->decimal('price', 10, 2)
+                ->default(0)
+                ->comment('The price paid for the course at the time of enrollment');
+                
             $table->enum('status', ['active', 'completed'])
                 ->default('active');
 

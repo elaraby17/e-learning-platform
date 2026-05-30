@@ -2,9 +2,7 @@
 @section('title', 'تسجيل الدخول')
 @section('content')
 
-<div class="min-h-screen bg-white dark:bg-slate-900 transition-colors duration-300">
-
-    @include('layouts.partials.header')
+<div class="min-h-screen bg-white dark:bg-slate-900 mt-20 transition-colors duration-300">
 
     <div class="min-h-[calc(100vh-73px)] flex items-center justify-center p-6 relative overflow-hidden">
 

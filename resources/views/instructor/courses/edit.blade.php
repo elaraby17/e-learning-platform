@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title', 'Add New Course')
+@section('title', 'Edit Course')
 
 @section('content')
 
@@ -8,18 +8,19 @@
 
     <!-- عنوان الفورم -->
     <div class="mb-6 border-b border-gray-100 dark:border-gray-800 pb-4">
-        <h2 class="text-2xl font-bold text-gray-800 dark:text-white">إضافة كورس جديد</h2>
+        <h2 class="text-2xl font-bold text-gray-800 dark:text-white">تعديل كورس</h2>
         <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">أدخل تفاصيل الكورس بعناية ليتم عرضه بشكل صحيح للطلاب.</p>
     </div>
 
-    <form action="{{ route('instructor.courses.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
+    <form action="{{ route('instructor.courses.update', $course->id) }}" method="POST" enctype="multipart/form-data" class="space-y-6">
         @csrf
+        @method('PUT')
 
         <!-- عنوان الكورس والـ Slug -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
                 <label for="title" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">عنوان الكورس *</label>
-                <input type="text" name="title" id="title" value="{{ old('title') }}" required
+                <input type="text" name="title" id="title" value="{{ old('title', $course->title) }}" required
                     class="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all">
                 @error('title') <span class="text-red-500 text-xs mt-1">{{ $message }}</span> @enderror
             </div>
@@ -35,7 +36,7 @@
         <!-- الوصف القصير -->
         <div>
             <label for="short_description" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">وصف قصير للتعريف بالكورس</label>
-            <input type="text" name="short_description" id="short_description" value="{{ old('short_description') }}"
+            <input type="text" name="short_description" id="short_description" value="{{ old('short_description' , $course->short_description) }}"
                 class="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all">
             @error('short_description') <span class="text-red-500 text-xs mt-1">{{ $message }}</span> @enderror
         </div>
@@ -49,7 +50,7 @@
                     class="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all">
                     <option value="">اختر التصنيف</option>
                     @foreach($categories as $category)
-                        <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
+                        <option value="{{ $category->id }}" {{ old('category_id', $course->category_id) == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
                     @endforeach
                 </select>
                 @error('category_id') <span class="text-red-500 text-xs mt-1">{{ $message }}</span> @enderror
@@ -60,7 +61,10 @@
                 <label for="instructor_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">المدرب *</label>
                 <select name="instructor_id" id="instructor_id" required
                     class="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all">
-                    <option value="{{ auth()->user()->id }}">{{ auth()->user()->name}}</option>
+                    <option value="">اختر المدرب</option>
+                    @foreach($instructors as $instructor)
+                        <option value="{{ $instructor->id }}" {{ old('instructor_id' , $course->instructor_id) == $instructor->id ? 'selected' : '' }}>{{ $instructor->name }}</option>
+                    @endforeach
                 </select>
                 @error('instructor_id') <span class="text-red-500 text-xs mt-1">{{ $message }}</span> @enderror
             </div>
@@ -80,7 +84,7 @@
             <div>
                 <label for="price" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">السعر (اتركه فارغاً للمجاني)</label>
                 <div class="relative">
-                    <input type="text" name="price" id="price" value="{{ old('price') }}" placeholder="0.00"
+                    <input type="text" name="price" id="price" value="{{ old('price' , $course->price) }}" placeholder="0.00"
                         class="w-full pl-12 pr-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all text-left">
                     <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-gray-400 dark:text-gray-500 text-sm">
                         USD
@@ -94,7 +98,7 @@
         <div>
             <label for="description" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">وصف الكورس بالتفصيل</label>
             <textarea name="description" id="description" rows="5"
-                class="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all resize-none">{{ old('description') }}</textarea>
+                class="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all resize-none">{{ old('description' , $course->description) }}</textarea>
             @error('description') <span class="text-red-500 text-xs mt-1">{{ $message }}</span> @enderror
         </div>
 
