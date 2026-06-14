@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\CourseRequest;
-use App\Models\Category;
 use App\Models\Course;
-use App\Models\User;
+use App\Models\Lesson;
+use App\Models\Section;
+use Illuminate\Support\Facades\Request;
 
 class CoursesController extends Controller
 {
@@ -14,63 +14,75 @@ class CoursesController extends Controller
     //     return view('courses.index');
     // }
 
-    // public function show($id)
-    // {
-    //     return view('courses.show', ['courseId' => $id]);
-    // }
-
-    public function create()
+    public function show(Course $course)
     {
-        $categories = Category::all(); // Assuming you have a Category model
-        $instructors = User::where('role', 'instructor')->get(); // Assuming you have a User model with a role field
 
-        return view('instructor.courses.addCourse', compact('categories', 'instructors'));
+        $course->load(['sections.lessons' => function ($q) {
+            $q->orderBy('order_number');
+        }]);
+
+        $lesson = $course->sections
+            ->flatMap->lessons
+            ->sortBy('order_number')
+            ->first();
+
+        return view('students.courses.courseDetails', compact('course', 'lesson'));
     }
 
-    public function store(CourseRequest $request)
+    public function store(Request $request)
     {
-        // dd($request->all());
-        $data = $request->validated();
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'section_id' => 'required|exists:sections,id',
+            'type' => 'required|in:video,article,quiz',
+            'content' => 'nullable|string',
+            'video_url' => 'nullable|url|max:255',
+            'video_duration' => 'nullable|integer|min:0',
+            'is_free_preview' => 'boolean',
+            'order_number' => 'nullable|integer|min:1',
+        ]);
 
-        // Handle image upload if an image is provided
-        if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('course_images', 'public');
-            $data['image'] = $imagePath;
-        }
-
-        Course::create($data);
-
-        return redirect()->route('instructor.dashboard')->with('success', 'Course created successfully.');
-
-    }
-
-
-        public function edit(Course $course)
-        {
-            $categories = Category::all();
-            $instructors = User::where('role', 'instructor')->get();
-
-            return view('instructor.courses.edit', compact('course', 'categories', 'instructors'));
-        }
-
-        public function update(CourseRequest $request, Course $course)
-        {
-            $data = $request->validated();
-
-            if ($request->hasFile('image')) {
-                $imagePath = $request->file('image')->store('course_images', 'public');
-                $data['image'] = $imagePath;
+        if (! empty($validated['video_url'])) {
+            $url = $validated['video_url'];
+            if (preg_match('/(youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]+)/', $url, $matches)) {
+                $validated['video_url'] = 'https://www.youtube.com/embed/'.$matches[2];
             }
-
-            $course->update($data);
-
-            return redirect()->route('instructor.dashboard')->with('success', 'Course updated successfully.');
         }
 
-        public function destroy(Course $course)
-        {
-            $course->delete();
+        $validated['is_free_preview'] = $request->has('is_free_preview');
 
-            return redirect()->route('instructor.dashboard')->with('success', 'Course deleted successfully.');
+        if (! $request->filled('order_number')) {
+            $validated['order_number'] = Lesson::where('section_id', $request->section_id)
+                ->max('order_number') + 1;
         }
+
+        try {
+            Lesson::create($validated);
+
+            return redirect()
+                ->route('instructor.sections.index')        // ← غيّره للـ route المناسب
+                ->with('success', 'تم إضافة الدرس "'.$validated['title'].'" بنجاح!');
+        } catch (\Exception $e) {
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with('error', 'حدث خطأ أثناء حفظ الدرس، يرجى المحاولة مرة أخرى.');
+        }
+    }
+
+    public function destroy(Section $section)
+    {
+        try {
+            $title = $section->title;
+            $section->delete(); // cascadeOnDelete يحذف الدروس تلقائياً
+
+            return redirect()
+                ->route('instructor.sections.index')
+                ->with('success', 'تم حذف السيكشن "'.$title.'" وجميع دروسه بنجاح.');
+        } catch (\Exception $e) {
+            return redirect()
+                ->back()
+                ->with('error', 'حدث خطأ أثناء الحذف، يرجى المحاولة مرة أخرى.');
+        }
+    }
 }

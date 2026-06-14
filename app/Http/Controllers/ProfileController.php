@@ -114,7 +114,7 @@ class ProfileController extends Controller
     {
         try {
             $course = Course::with(
-                
+
             )->findOrFail($id);
 
             if (! $enrollment) {

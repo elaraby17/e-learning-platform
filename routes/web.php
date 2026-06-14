@@ -1,11 +1,12 @@
 <?php
-
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CoursesController;
 use App\Http\Controllers\InstructorController;
+use App\Http\Controllers\LessonController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SectionController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -22,10 +23,6 @@ Route::prefix('auth')->name('auth.')->middleware('guest')->group(function () {
 
 });
 
-
-
-
-
 Route::prefix('students')->middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
     Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
@@ -34,16 +31,8 @@ Route::prefix('students')->middleware('auth')->group(function () {
     Route::post('/courses/{course}/enroll', [ProfileController::class, 'store'])->name('courses.enroll');
     Route::get('all-courses', [ProfileController::class, 'allCourses'])->name('all-courses');
     Route::get('courses', [ProfileController::class, 'courses'])->name('courses');
-    Route::get('courses/{course}', [ProfileController::class, 'courseDetails'])->name('course-details');
+    Route::get('courses/{course}', [CoursesController::class, 'show'])->name('course-details');
 });
-
-
-
-
-
-
-
-
 
 Route::middleware('auth', 'role:user')->prefix('student')->name('student.')->group(function () {
     Route::get('/home', [ProfileController::class, 'index'])->name('home');
@@ -59,6 +48,9 @@ Route::middleware('auth', 'role:instructor')->prefix('instructor')->name('instru
     Route::put('/courses/{course}/update', [CoursesController::class, 'update'])->name('courses.update');
 
     Route::delete('/courses/{course}/destroy', [CoursesController::class, 'destroy'])->name('courses.destroy');
+
+    Route::resource('/sections', SectionController::class);
+    Route::resource('/lessons', LessonController::class);
 
 });
 

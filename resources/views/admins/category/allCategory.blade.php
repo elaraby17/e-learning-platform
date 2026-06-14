@@ -11,12 +11,7 @@
             <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">يمكنك إضافة، عرض، وحذف الأقسام المتاحة بالمنصة.</p>
         </div>
 
-        @if (session('success'))
-            <div
-                class="mb-6 p-4 bg-emerald-500/10 border-r-4 border-emerald-500 text-emerald-600 dark:text-emerald-400 rounded-lg text-sm font-medium">
-                {{ session('success') }}
-            </div>
-        @endif
+        <x-success-component />
 
         <div
             class="bg-white dark:bg-[#1e2530]/80 p-6 rounded-2xl shadow-md dark:shadow-xl border border-slate-200 dark:border-slate-700/40 mb-8 backdrop-blur-sm">
@@ -78,12 +73,12 @@
                                     {{ $category->description ?? 'لا يوجد وصف حالياً' }}</td>
                                 <td class="py-4 px-6 text-center space-x-reverse space-x-2 whitespace-nowrap text-xs">
 
-                                    <a href="{{ route('admin.categories.edit', $category->id) }}"
+                                    <a href="{{ route('admin.categories.edit', $category) }}"
                                         class="inline-block text-amber-600 dark:text-amber-400 hover:text-amber-700 dark:hover:text-amber-300 bg-amber-500/10 hover:bg-amber-500/20 font-medium px-3 py-1.5 rounded-lg transition-colors">
                                         تعديل
                                     </a>
 
-                                    <form action="{{ route('admin.categories.destroy', $category->id) }}" method="POST"
+                                    <form action="{{ route('admin.categories.destroy', $category) }}" method="POST"
                                         class="inline-block" onsubmit="return confirm('هل أنت متأكد من حذف هذا القسم؟')">
                                         @csrf
                                         @method('DELETE')

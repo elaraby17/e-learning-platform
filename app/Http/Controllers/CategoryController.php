@@ -38,18 +38,35 @@ class CategoryController extends Controller
         //
     }
 
-    public function edit($id)
+    public function edit(Category $category)
     {
-        //
+        $categories = Category::orderBy('created_at', 'desc')->paginate(10);
+
+        return view('admins.category.edit', compact('category', 'categories'));
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, Category $category)
     {
-        //
+        $request->validate([
+            'name' => 'required|string|max:255|unique:categories,name,' . $category->id,
+            'description' => 'nullable|string|max:1000',
+        ]);
+
+        $category->update([
+            'name' => $request->name,
+            'description' => $request->description,
+            'slug' => Str::slug($request->name, '-'),
+        ]);
+
+        return redirect()->route('admin.categories.index')->with('success', 'تم تحديث القسم بنجاح.');
     }
 
-    public function destroy($id)
+    public function destroy(Category $category)
     {
-        //
+        $category->delete();
+
+        return redirect()->route('admin.categories.index')->with('success', 'تم حذف القسم بنجاح.');
     }
 }
+
+
