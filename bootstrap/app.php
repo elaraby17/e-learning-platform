@@ -14,10 +14,12 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        $middleware->alias([
-            'role' => CheckRole::class,
-            'check_enrollment' => CheckEnrollment::class,
-        ]);
+      $middleware->redirectGuestsTo(fn () => route('auth.login'));
+
+    $middleware->alias([
+        'role' => CheckRole::class,
+        'check_enrollment' => CheckEnrollment::class,
+    ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
