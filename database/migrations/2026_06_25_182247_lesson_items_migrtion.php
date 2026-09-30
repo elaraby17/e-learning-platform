@@ -11,17 +11,31 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('lessons', function (Blueprint $table) {
+        Schema::create('lesson_items', function (Blueprint $table) {
             $table->id();
 
-            $table->foreignId('section_id')
+            $table->foreignId('lesson_id')
                 ->constrained()
                 ->cascadeOnDelete();
 
+            $table->enum('type', [
+                'video',
+                'pdf',
+                'file',
+                'quiz',
+                'assignment',
+                'link',
+            ]);
+
             $table->string('title');
+
             $table->text('description')->nullable();
 
-            $table->boolean('is_free_preview')->default(false);
+            $table->string('video_url')->nullable();
+
+            $table->string('file_path')->nullable();
+
+            $table->string('external_link')->nullable();
 
             $table->integer('order_number')->default(1);
 
@@ -34,6 +48,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('lessons');
+        //
     }
 };

@@ -2,20 +2,28 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreUserRequest;
+use App\Http\Requests\UpdateUserRequest;
 use App\Models\User;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
+use App\Services\UserService;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
+    public $userService;
+
+    public function __construct(UserService $userService)
+    {
+        $this->userService = $userService;
+    }
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $users = User::where('role', 'user')->orderBy('created_at', 'desc')->paginate(10);
+        $users = $this->userService->getAllUsers();
 
         return view('admins.users.index', compact('users'));
     }
@@ -31,31 +39,12 @@ class UserController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreUserRequest $request)
     {
         try {
-            $validatedData = $request->validate([
-                'name' => 'required|string|max:255',
-                'email' => 'required|string|email|max:255|unique:users,email',
-                'phone' => 'required|string|max:20|unique:users,phone|starts_with:010,011,012,015',
-                'role' => 'required|in:user,instructor,admin',
-                'status' => 'required|in:active,inactive',
-                'gender' => 'nullable|in:male,female,other',
-                'bio' => 'nullable|string|max:1000',
-                'password' => 'required|string|min:8|confirmed',
-                'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
-            ]);
+            $this->userService->createUser($request);
 
-            if ($request->hasFile('image')) {
-                $path = $request->file('image')->store('users', 'public');
-                $validatedData['image'] = $path;
-            }
-
-            $validatedData['password'] = Hash::make($request->password);
-
-            User::create($validatedData);
-
-            return redirect()->route('users.index')
+            return redirect()->route('admin.users.index')
                 ->with('success', 'تم إنشاء حساب المستخدم بنجاح.');
         } catch (\Throwable $th) {
             Log::info('Error creating user: '.$th->getMessage());
@@ -83,39 +72,13 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, User $user)
+    public function update(UpdateUserRequest $request, User $user)
     {
         try {
-            $validatedData = $request->validate([
-                'name' => 'required|string|max:255',
-                'email' => 'required|string|email|max:255|unique:users,email,'.$user->id,
-                'phone' => 'required|string|max:20|unique:users,phone,'.$user->id,
-                'status' => 'required|in:active,inactive',
-                'gender' => 'nullable|in:male,female,other',
-                'bio' => 'nullable|string|max:1000',
-                'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
-                'password' => 'nullable|string|min:8',
-            ]);
-
-            if ($request->hasFile('image')) {
-                if ($user->image) {
-                    Storage::disk('public')->delete($user->image);
-                }
-
-                $path = $request->file('image')->store('users', 'public');
-                $validatedData['image'] = $path;
-            }
-
-            if ($request->filled('password')) {
-                $validatedData['password'] = Hash::make($request->password);
-            } else {
-                unset($validatedData['password']);
-            }
-
-            $user->update($validatedData);
-
-            return redirect()->route('users.index')
+            $this->userService->updateUser($request, $user);
+            return redirect()->route('admin.users.index')
                 ->with('success', 'تم تحديث بيانات المستخدم بنجاح.');
+
         } catch (\Throwable $th) {
             Log::info('Error Updating user: '.$th->getMessage());
 
@@ -130,11 +93,9 @@ class UserController extends Controller
     {
         try {
             $user->delete();
-
             return back()->with('status', 'user-deleted');
         } catch (\Throwable $th) {
             Log::info('Error Deleting user: '.$th->getMessage());
-
             return back()->with('error', 'حدث خطأ اثناء حذف المستخدم.');
         }
     }

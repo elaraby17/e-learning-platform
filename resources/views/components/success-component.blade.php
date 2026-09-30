@@ -89,11 +89,10 @@
                         حدث خطأ
                     </h3>
 
-                    @foreach ($errors->all() as $error)
+
                         <p class="text-gray-600 dark:text-gray-300 text-sm leading-relaxed">
-                            {{ $error }}
+                            {{ session('error') }}
                         </p>
-                    @endforeach
                 </div>
 
                 {{-- Close Button --}}

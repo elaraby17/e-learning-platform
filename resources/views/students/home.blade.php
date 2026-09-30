@@ -11,20 +11,13 @@
                     {{ now()->locale('ar')->isoFormat('dddd، D MMMM YYYY') }}
                 </p>
                 <h1 class="text-3xl font-black text-slate-900 dark:text-white">
-                    أهلاً بك، {{ auth()->user()->name }} 👋
+                    أهلاً بك، {{ auth()->user()->name }}
                 </h1>
                 <p class="text-slate-400 dark:text-slate-500 mt-1 text-sm">
                     سعيد برؤيتك مرة أخرى، لنكمل رحلة التعلم اليوم.
                 </p>
             </div>
-            <a href="{{ route('all-courses') }}"
-                class="flex items-center gap-2 px-6 py-3.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-2xl font-bold shadow-lg shadow-indigo-200 dark:shadow-indigo-900/50 hover:-translate-y-0.5 transform transition-all duration-200 text-sm whitespace-nowrap">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
-                تصفح الكورسات
-            </a>
+
         </div>
 
         {{-- ══ STATS CARDS ══ --}}
@@ -99,11 +92,10 @@
                         $course = $enrollment->course;
                     @endphp
 
-
-                    <x-card-course-component :course="$course" :title="$course->title" :image="$course->image ? asset('storage/' . $course->image) : asset('assets/default-course.jpg')" :categoryName="$course->category->name ?? 'جديد'"
+                    <x-card-course-component :course="$course" :title="$course->title" :description="$course->description" :image="$course->image ? asset('storage/' . $course->image) : asset('assets/default-course.jpg')" :categoryName="$course->category->name ?? 'جديد'"
                         :instructorName="$course->instructor->name" :instructorImage="$course->instructor->image
                             ? Storage::url($course->instructor->image)
-                            : asset('assets/default-avatar.png')" :price="$course->price" />
+                            : asset('assets/default-avatar.png')" :price="$course->price" :progress="$enrollment->progress ?? null" />
 
                 @empty
                     {{-- Empty state --}}
@@ -131,8 +123,6 @@
                 @endforelse
             </div>
         </div>
-    </div>
-
     </div>
 
 @endsection

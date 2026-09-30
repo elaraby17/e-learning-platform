@@ -17,31 +17,34 @@
                 </div>
             </div>
 
+            <x-success-component />
+
             {{-- ══ Filters & Categories ══ --}}
             <div class="flex flex-wrap gap-3 mb-10">
-                <button
-                    class="px-6 py-2.5 bg-indigo-600 text-white rounded-xl font-bold text-sm shadow-lg shadow-indigo-600/20">الكل</button>
-                <button
-                    class="px-6 py-2.5 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded-xl font-bold text-sm border border-slate-200 dark:border-slate-700 hover:border-indigo-500 transition-all">البرمجة</button>
-                <button
-                    class="px-6 py-2.5 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded-xl font-bold text-sm border border-slate-200 dark:border-slate-700 hover:border-indigo-500 transition-all">التصميم</button>
-                <button
-                    class="px-6 py-2.5 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded-xl font-bold text-sm border border-slate-200 dark:border-slate-700 hover:border-indigo-500 transition-all">التسويق</button>
-                <button
-                    class="px-6 py-2.5 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded-xl font-bold text-sm border border-slate-200 dark:border-slate-700 hover:border-indigo-500 transition-all">الذكاء
-                    الاصطناعي</button>
+                <!-- زر الكل -->
+                <a href="{{ route('all-courses') }}"
+                    class="px-6 py-2.5 rounded-xl font-bold text-sm transition-all shadow-lg {{ is_null($category_slug) ? 'bg-indigo-600 text-white shadow-indigo-600/20' : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:border-indigo-500' }}">
+                    الكل
+                </a>
+
+                <!-- تكرار الأقسام ديناميكياً -->
+                @foreach ($categories as $cat)
+                    <a href="{{ route('all-courses', ['category' => $cat->slug]) }}"
+                        class="px-6 py-2.5 rounded-xl font-bold text-sm transition-all {{ $category_slug == $cat->slug ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/20' : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:border-indigo-500' }}">
+                        {{ $cat->name }}
+                    </a>
+                @endforeach
             </div>
 
             {{-- ══ Courses Grid ══ --}}
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-8">
 
                 @forelse($courses as $course)
-
-                    <x-card-course-component :course="$course" :title="$course->title" :image="$course->image ? asset('storage/' . $course->image) : asset('assets/default-course.jpg')" :categoryName="$course->category->name ?? 'جديد'" :instructorName="$course->instructor->name"
-                        :instructorImage="$course->instructor->image
+                    <x-card-course-component :course="$course" :title="$course->title" :description="$course->description" :image="$course->image ? asset('storage/' . $course->image) : asset('assets/default-course.jpg')"
+                        :categoryName="$course->category->name ?? 'جديد'" :instructorName="$course->instructor->name" :instructorImage="$course->instructor->image
                             ? Storage::url($course->instructor->image)
                             : asset('assets/default-avatar.png')" :price="$course->price" />
-                            
+
                 @empty
                     {{-- Empty State --}}
                     <div

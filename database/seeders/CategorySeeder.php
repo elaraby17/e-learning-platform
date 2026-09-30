@@ -24,6 +24,7 @@ class CategorySeeder extends Seeder
             Category::create([
                 'name' => $category,
                 'slug' => \Str::slug($category),
+                'instructor_id' => 1
             ]);
         }
     }

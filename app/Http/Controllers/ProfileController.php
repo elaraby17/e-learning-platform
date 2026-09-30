@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Course;
 use App\Models\Enrollment;
 use Illuminate\Http\Request;
@@ -66,12 +67,28 @@ class ProfileController extends Controller
         return back()->with('status', 'password-updated');
     }
 
-    public function allCourses()
+    public function allCourses($category_slug = null)
     {
         $user = auth()->user();
-        $courses = Course::with(['instructor', 'category'])->where('status', 'published')->paginate(10);
 
-        return view('students.courses.allCourses', compact('courses'));
+        // جلب الأقسام التي تمتلك كورسات منشورة فقط (بإمكانك جلبها جميعا إذا أردت Category::all())
+        $categoryIds = Course::where('status', 'published')->pluck('category_id')->unique();
+        $categories = Category::whereIn('id', $categoryIds)->get();
+
+        // تجهيز استعلام الكورسات
+        $query = Course::with(['instructor', 'category'])->where('status', 'published');
+
+        // تصفية الكورسات إذا تم اختيار قسم
+        if ($category_slug = request()->route('category')) {
+            $category = Category::where('slug', $category_slug)->first();
+            if ($category) {
+                $query->where('category_id', $category->id);
+            }
+        }
+
+        $courses = $query->paginate(10);
+
+        return view('students.courses.allCourses', compact('courses', 'categories', 'category_slug'));
     }
 
     public function courses()

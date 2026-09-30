@@ -4,7 +4,7 @@
 
     <div class="min-h-screen bg-slate-50 dark:bg-slate-900 py-12 px-4 lg:p-12" dir="rtl">
         <div class="max-w-7xl mx-auto">
-<x-success-component />
+            <x-success-component />
             {{-- ══ Header Section ══ --}}
             <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
                 <div>
@@ -17,29 +17,15 @@
                 </div>
             </div>
 
-            {{-- ══ Filters & Categories ══ --}}
-            <div class="flex flex-wrap gap-3 mb-10">
-                <button
-                    class="px-6 py-2.5 bg-indigo-600 text-white rounded-xl font-bold text-sm shadow-lg shadow-indigo-600/20">الكل</button>
-                <button
-                    class="px-6 py-2.5 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded-xl font-bold text-sm border border-slate-200 dark:border-slate-700 hover:border-indigo-500 transition-all">البرمجة</button>
-                <button
-                    class="px-6 py-2.5 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded-xl font-bold text-sm border border-slate-200 dark:border-slate-700 hover:border-indigo-500 transition-all">التصميم</button>
-                <button
-                    class="px-6 py-2.5 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded-xl font-bold text-sm border border-slate-200 dark:border-slate-700 hover:border-indigo-500 transition-all">التسويق</button>
-                <button
-                    class="px-6 py-2.5 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded-xl font-bold text-sm border border-slate-200 dark:border-slate-700 hover:border-indigo-500 transition-all">الذكاء
-                    الاصطناعي</button>
-            </div>
-
             {{-- ══ Courses Grid ══ --}}
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-8">
 
                 @forelse($courses as $course)
-                    <x-card-course-component :course="$course" :title="$course->title" :image="$course->image ? asset('storage/' . $course->image) : asset('assets/default-course.jpg')" :categoryName="$course->category->name ?? 'جديد'"
-                        :instructorName="$course->instructor->name" :instructorImage="$course->instructor->image
+                    <x-card-course-component :course="$course" :title="$course->title" :description="$course->description" :image="$course->image ? asset('storage/' . $course->image) : asset('assets/default-course.jpg')"
+                        :categoryName="$course->category->name ?? 'جديد'" :instructorName="$course->instructor->name" :instructorImage="$course->instructor->image
                             ? Storage::url($course->instructor->image)
                             : asset('assets/default-avatar.png')" :price="$course->price" />
+
                 @empty
                     {{-- Empty State --}}
                     <div
@@ -57,6 +43,8 @@
                 @endforelse
 
             </div>
+
+
 
             {{-- ══ Pagination ══ --}}
             @if ($courses->hasPages())

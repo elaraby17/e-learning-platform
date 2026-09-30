@@ -39,11 +39,11 @@ public function store(Request $request)
         'order_number' => 'nullable|integer|min:1',
     ]);
 
-    // تحويل رابط اليوتيوب إلى Embed تلقائياً إذا كان متوفراً
+
     if (!empty($validated['video_url'])) {
         $url = $validated['video_url'];
 
-        // التحقق إذا كان الرابط من يوتيوب وليس بتنسيق Embed بالفعل
+
         if (preg_match('/(youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]+)/', $url, $matches)) {
             $videoId = $matches[2];
             $validated['video_url'] = "https://www.youtube.com/embed/" . $videoId;

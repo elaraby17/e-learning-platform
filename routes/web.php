@@ -29,9 +29,9 @@ Route::prefix('students')->middleware('auth')->group(function () {
     Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('password.update.custom');
 
     Route::post('/courses/{course}/enroll', [ProfileController::class, 'store'])->name('courses.enroll');
-    Route::get('all-courses', [ProfileController::class, 'allCourses'])->name('all-courses');
+    Route::get('all-courses/{category?}', [ProfileController::class, 'allCourses'])->name('all-courses');
     Route::get('courses', [ProfileController::class, 'courses'])->name('courses');
-    Route::get('courses/{course}', [CoursesController::class, 'show'])->name('course-details');
+    Route::get('courses/{course}', [CoursesController::class, 'show'])->middleware('check_enrollment')->name('course-details');
 });
 
 Route::middleware('auth', 'role:user')->prefix('student')->name('student.')->group(function () {
