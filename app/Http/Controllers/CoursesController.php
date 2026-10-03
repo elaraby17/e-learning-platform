@@ -1,77 +1,69 @@
 <?php
-
+// app/Http/Controllers/CoursesController.php
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CourseRequest;
 use App\Models\Category;
 use App\Models\Course;
 use App\Models\User;
+use App\Services\CourseService;
 
 class CoursesController extends Controller
 {
-    // public function index()
-    // {
-    //     return view('courses.index');
-    // }
+    public function __construct(private CourseService $courseService) {}
 
     public function show(Course $course)
     {
+        $course->load('sections.lessons');
         $lesson = $course->sections->flatMap->lessons->first();
+
         return view('students.courses.courseDetails', compact('course', 'lesson'));
     }
 
     public function create()
     {
-        $categories = Category::all(); // Assuming you have a Category model
-        $instructors = User::where('role', 'instructor')->get(); // Assuming you have a User model with a role field
+        $this->authorize('create', Course::class);
+
+        $categories = Category::all();
+        $instructors = User::where('role', 'instructor')->get();
 
         return view('instructor.courses.addCourse', compact('categories', 'instructors'));
     }
 
     public function store(CourseRequest $request)
     {
-        // dd($request->all());
-        $data = $request->validated();
+        $this->authorize('create', Course::class);
 
-        // Handle image upload if an image is provided
-        if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('course_images', 'public');
-            $data['image'] = $imagePath;
-        }
+        $this->courseService->create($request->validated(), auth()->user());
 
-        Course::create($data);
-
-        return redirect()->route('instructor.dashboard')->with('success', 'Course created successfully.');
-
+        return redirect()->route('instructor.dashboard')->with('success', 'تم إنشاء الكورس بنجاح.');
     }
 
+    public function edit(Course $course)
+    {
+        $this->authorize('update', $course);
 
-        public function edit(Course $course)
-        {
-            $categories = Category::all();
-            $instructors = User::where('role', 'instructor')->get();
+        $categories = Category::all();
+        $instructors = User::where('role', 'instructor')->get();
 
-            return view('instructor.courses.edit', compact('course', 'categories', 'instructors'));
-        }
+        return view('instructor.courses.edit', compact('course', 'categories', 'instructors'));
+    }
 
-        public function update(CourseRequest $request, Course $course)
-        {
-            $data = $request->validated();
+    public function update(CourseRequest $request, Course $course)
+    {
+        $this->authorize('update', $course);
 
-            if ($request->hasFile('image')) {
-                $imagePath = $request->file('image')->store('course_images', 'public');
-                $data['image'] = $imagePath;
-            }
+        $this->courseService->update($course, $request->validated(), auth()->user());
 
-            $course->update($data);
+        return redirect()->route('instructor.dashboard')->with('success', 'تم تحديث الكورس بنجاح.');
+    }
 
-            return redirect()->route('instructor.dashboard')->with('success', 'Course updated successfully.');
-        }
+    public function destroy(Course $course)
+    {
+        $this->authorize('delete', $course);
 
-        public function destroy(Course $course)
-        {
-            $course->delete();
+        $this->courseService->delete($course);
 
-            return redirect()->route('instructor.dashboard')->with('success', 'Course deleted successfully.');
-        }
+        return redirect()->route('instructor.dashboard')->with('success', 'تم حذف الكورس بنجاح.');
+    }
 }

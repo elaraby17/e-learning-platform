@@ -27,7 +27,7 @@ return new class extends Migration
             $table->decimal('price', 10, 2)
                 ->default(0)
                 ->comment('The price paid for the course at the time of enrollment');
-                
+
             $table->enum('status', ['active', 'completed'])
                 ->default('active');
 

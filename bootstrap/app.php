@@ -1,10 +1,12 @@
 <?php
 
+use App\Exceptions\BusinessException;
 use App\Http\Middleware\CheckEnrollment;
 use App\Http\Middleware\CheckRole;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Http\Request;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -14,13 +16,25 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-      $middleware->redirectGuestsTo(fn () => route('auth.login'));
+        $middleware->redirectGuestsTo(fn () => route('auth.login'));
 
-    $middleware->alias([
-        'role' => CheckRole::class,
-        'check_enrollment' => CheckEnrollment::class,
-    ]);
+        $middleware->alias([
+            'role' => CheckRole::class,
+            'check_enrollment' => CheckEnrollment::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        //
+        // أي request على /api يرجع JSON دايماً، حتى لو العميل ما بعتش Accept header
+        $exceptions->shouldRenderJsonWhen(
+            fn (Request $request) => $request->is('api/*') || $request->expectsJson()
+        );
+
+        // الـ Handler المركزي لأخطاء الـ business
+        $exceptions->render(function (BusinessException $e, Request $request) {
+            if ($request->is('api/*') || $request->expectsJson()) {
+                return response()->json(['message' => $e->getMessage()], $e->status());
+            }
+
+            return back()->withInput()->with('error', $e->getMessage());
+        });
     })->create();

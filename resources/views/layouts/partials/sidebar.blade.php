@@ -30,7 +30,7 @@
         {{-- Nav --}}
         <nav class="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
 
-            @if (auth()->user()->role == 'user')
+            @if (auth()->user()->role == 'student')
                 <a href="{{ route('student.home') }}"
                     class="flex items-center gap-3 px-3 py-3 rounded-2xl transition
                         {{ request()->routeIs('student.home') ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-100 dark:shadow-indigo-900/50' : 'text-slate-500 dark:text-slate-400 hover:bg-indigo-50 dark:hover:bg-slate-700 hover:text-indigo-600 dark:hover:text-indigo-400' }}">

@@ -59,7 +59,7 @@
 
                     <div class="flex items-center justify-end gap-2">
                         <label class="text-slate-500 dark:text-slate-400 text-sm font-semibold cursor-pointer">تذكرني</label>
-                        <input type="checkbox" name="remember" class="w-4 h-4 accent-indigo-600 rounded cursor-pointer">
+                        <input type="checkbox" name="remember" value="1" class="w-4 h-4 accent-indigo-600 rounded cursor-pointer">
                     </div>
 
                     <button type="submit"

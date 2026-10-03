@@ -18,10 +18,10 @@ class Course extends Model
         'image',
     ];
 
-    public function instructor()
-    {
-        return $this->belongsTo(User::class);
-    }
+public function instructor()
+{
+    return $this->belongsTo(User::class, 'instructor_id');
+}
 
     public function category()
     {

@@ -12,21 +12,34 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('lessons', function (Blueprint $table) {
-            $table->id();
+    $table->id();
 
-            $table->foreignId('section_id')
-                ->constrained()
-                ->cascadeOnDelete();
+    $table->foreignId('section_id')
+        ->constrained()
+        ->cascadeOnDelete();
 
-            $table->string('title');
-            $table->text('description')->nullable();
+    $table->string('title');
 
-            $table->boolean('is_free_preview')->default(false);
+    $table->enum('type', [
+        'video',
+        'article',
+        'quiz',
+    ]);
 
-            $table->integer('order_number')->default(1);
+    $table->longText('content')->nullable();
 
-            $table->timestamps();
-        });
+    $table->string('video_url')->nullable();
+
+    $table->integer('video_duration')->nullable();
+
+    $table->string('video_thumbnail')->nullable();
+
+    $table->boolean('is_free_preview')->default(false);
+
+    $table->unsignedInteger('order_number')->default(0);
+
+    $table->timestamps();
+});
     }
 
     /**

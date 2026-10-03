@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Exceptions\CannotDeleteSelfException;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
@@ -45,4 +46,12 @@ class UserService
 
         return $user->update($validatedData);
     }
+    public function deleteUser(User $user): void
+{
+    if ($user->id === auth()->id()) {
+        throw new CannotDeleteSelfException();
+    }
+
+    $user->delete();
+}
 }
