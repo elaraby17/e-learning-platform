@@ -1,8 +1,9 @@
 <?php
 // app/Http/Controllers/AuthController.php
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\student;
 
 use App\Exceptions\InvalidCredentialsException;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
 use App\Services\AuthService;

@@ -1,7 +1,8 @@
 <?php
 // app/Http/Controllers/InstructorController.php
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\instructor;
 
+use App\Http\Controllers\Controller;
 use App\Services\DashboardService;
 
 class InstructorController extends Controller

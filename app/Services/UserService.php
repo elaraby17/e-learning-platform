@@ -9,10 +9,12 @@ use Illuminate\Support\Facades\Storage;
 
 class UserService
 {
-    public function getAllUsers()
-    {
-        return User::where('role', 'user')->orderBy('created_at', 'desc')->paginate(10);
-    }
+public function getAllUsers()
+{
+    return User::whereIn('role', ['student', 'instructor'])
+        ->orderBy('created_at', 'desc')
+        ->paginate(10);
+}
 
     public function createUser($request)
     {
@@ -46,10 +48,14 @@ class UserService
 
         return $user->update($validatedData);
     }
-    public function deleteUser(User $user): void
+public function deleteUser(User $user): void
 {
     if ($user->id === auth()->id()) {
         throw new CannotDeleteSelfException();
+    }
+
+    if ($user->image) {
+        Storage::disk('public')->delete($user->image);
     }
 
     $user->delete();

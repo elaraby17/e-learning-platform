@@ -1,7 +1,8 @@
 <?php
 // app/Http/Controllers/AdminController.php
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
 use App\Services\DashboardService;
 
 class AdminController extends Controller

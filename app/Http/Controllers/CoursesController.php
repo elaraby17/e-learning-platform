@@ -12,6 +12,8 @@ class CoursesController extends Controller
 {
     public function __construct(private CourseService $courseService) {}
 
+
+
     public function show(Course $course)
     {
         $course->load('sections.lessons');
@@ -20,15 +22,21 @@ class CoursesController extends Controller
         return view('students.courses.courseDetails', compact('course', 'lesson'));
     }
 
-    public function create()
-    {
-        $this->authorize('create', Course::class);
+public function create()
+{
+    $this->authorize('create', Course::class);
 
-        $categories = Category::all();
-        $instructors = User::where('role', 'instructor')->get();
+    $categories = Category::all();
 
-        return view('instructor.courses.addCourse', compact('categories', 'instructors'));
-    }
+    $instructors = auth()->user()->role === 'admin'
+        ? User::where('role', 'instructor')->get()
+        : collect();
+
+    return view(
+        'instructor.courses.addCourse',
+        compact('categories', 'instructors')
+    );
+}
 
     public function store(CourseRequest $request)
     {
@@ -39,15 +47,21 @@ class CoursesController extends Controller
         return redirect()->route('instructor.dashboard')->with('success', 'تم إنشاء الكورس بنجاح.');
     }
 
-    public function edit(Course $course)
-    {
-        $this->authorize('update', $course);
+public function edit(Course $course)
+{
+    $this->authorize('update', $course);
 
-        $categories = Category::all();
-        $instructors = User::where('role', 'instructor')->get();
+    $categories = Category::all();
 
-        return view('instructor.courses.edit', compact('course', 'categories', 'instructors'));
-    }
+    $instructors = auth()->user()->role === 'admin'
+        ? User::where('role', 'instructor')->get()
+        : collect();
+
+    return view(
+        'instructor.courses.edit',
+        compact('course', 'categories', 'instructors')
+    );
+}
 
     public function update(CourseRequest $request, Course $course)
     {

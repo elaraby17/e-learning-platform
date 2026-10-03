@@ -1,7 +1,8 @@
 <?php
 // app/Http/Controllers/ProfileController.php
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\student;
 
+use App\Http\Controllers\Controller;
 use App\Models\Course;
 use App\Services\CourseService;
 use App\Services\EnrollmentService;

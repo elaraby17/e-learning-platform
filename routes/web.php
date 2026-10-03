@@ -1,14 +1,15 @@
 <?php
 
-use App\Http\Controllers\AdminController;
-use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CoursesController;
-use App\Http\Controllers\InstructorController;
+use App\Http\Controllers\Instructor\InstructorController;
 use App\Http\Controllers\LessonController;
-use App\Http\Controllers\ProfileController;
+
 use App\Http\Controllers\SectionController;
-use App\Http\Controllers\UserController;
+use App\Http\Controllers\student\AuthController;
+use App\Http\Controllers\student\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'welcome');
@@ -39,7 +40,10 @@ Route::middleware(['auth', 'role:student'])->group(function () {
         Route::get('/courses/{course}', [CoursesController::class, 'show'])
             ->middleware('check_enrollment')
             ->name('course-details');
+
+
     });
+
 });
 
 /* ---------- Instructor / Admin ---------- */
@@ -52,6 +56,10 @@ Route::middleware(['auth', 'role:instructor,admin'])->prefix('instructor')->name
     Route::put('/courses/{course}/update', [CoursesController::class, 'update'])->name('courses.update');
     Route::delete('/courses/{course}/destroy', [CoursesController::class, 'destroy'])->name('courses.destroy');
 
+    Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
+    Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
+    Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('password.update.custom');
+
     Route::resource('sections', SectionController::class)->only(['create', 'store']);
     Route::resource('lessons', LessonController::class)->only(['store']);
 });
@@ -61,4 +69,10 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('/dashboard', [AdminController::class, 'index'])->name('dashboard');
     Route::resource('users', UserController::class);
     Route::resource('categories', CategoryController::class)->except(['create', 'show']);
+    Route::get('/courses', [CoursesController::class, 'index'])->name('courses.index');
+
+    Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
+    Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
+    Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('password.update.custom');
+
 });

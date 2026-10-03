@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Models\User;
@@ -12,6 +13,24 @@ class UserController extends Controller
 
 
 public function __construct(private UserService $userService) {}
+
+public function index()
+{
+    $users = $this->userService->getAllUsers();
+
+    return view('admins.users.index', compact('users'));
+}
+
+public function create()
+{
+    return view('admins.users.create');
+}
+
+public function edit(User $user)
+{
+    return view('admins.users.edit', compact('user'));
+}
+
 
 public function store(StoreUserRequest $request)
 {

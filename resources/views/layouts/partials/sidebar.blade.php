@@ -1,171 +1,104 @@
-<div x-data="{ open: true }"
-    class="flex min-h-screen bg-slate-50 dark:bg-slate-900 mt-[73px] transition-colors duration-300" dir="rtl"
-    style="font-family:'Cairo',sans-serif">
+@php
+    $authUser = auth()->user();
+    $userRole = $authUser?->role ?? 'student';
+    $roleLabel = match ($userRole) {
+        'admin' => 'مدير النظام',
+        'instructor' => 'محاضر',
+        default => 'طالب',
+    };
+    $roleIcon = match ($userRole) {
+        'admin' => 'fa-solid fa-user-shield',
+        'instructor' => 'fa-solid fa-chalkboard-user',
+        default => 'fa-solid fa-user-graduate',
+    };
+    $homeRoute = match ($userRole) {
+        'admin' => 'admin.dashboard',
+        'instructor' => 'instructor.dashboard',
+        default => 'student.home',
+    };
+    $menuPartial = match ($userRole) {
+        'admin' => 'layouts.partials.menu-admin',
+        'instructor' => 'layouts.partials.menu-instructor',
+        default => 'layouts.partials.menu-student',
+    };
+    $homeUrl = Route::has($homeRoute) ? route($homeRoute) : url('/');
 
-    {{-- ══ SIDEBAR ══ --}}
-    <aside :class="open ? 'w-64' : 'w-20'"
-        class="bg-white dark:bg-slate-800 border-l border-gray-100 dark:border-slate-700 flex flex-col transition-all duration-300 ease-in-out sticky top-[73px] h-[calc(100vh-73px)] shadow-sm flex-shrink-0">
+    $avatarUrl = match (true) {
+        blank($authUser?->image) => null,
+        \Illuminate\Support\Str::startsWith($authUser->image, ['http://', 'https://']) => $authUser->image,
+        str_starts_with($authUser->image, '/') => $authUser->image,
+        default => asset('storage/' . $authUser->image),
+    };
+@endphp
 
-        {{-- Header --}}
-        <div class="p-5 flex items-center justify-between border-b border-gray-50 dark:border-slate-700">
-            <a x-show="open" x-transition href="{{ route('student.home') }}"
-                class="flex items-center gap-2 overflow-hidden">
-                <div class="bg-indigo-600 p-1.5 rounded-lg flex-shrink-0">
-                    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M13 10V3L4 14h7v7l9-11h-7z" />
-                    </svg>
-                </div>
-                <span class="text-sm font-black text-indigo-700 dark:text-indigo-400 whitespace-nowrap">E
-                    Learning</span>
-            </a>
-            <button @click="open = !open"
-                class="p-2 rounded-xl bg-indigo-50 dark:bg-slate-700 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-100 dark:hover:bg-slate-600 transition flex-shrink-0">
-                <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7" />
-                </svg>
-            </button>
-        </div>
+{{-- ══ Sidebar · desktop (fixed, collapsible) + mobile/tablet (off-canvas drawer) ══ --}}
+<aside id="app-sidebar-drawer"
+    class="app-sidebar fixed inset-y-0 start-0 z-50 flex flex-col border-e border-slate-200 bg-surface shadow-card transition-[width,transform] duration-200 ease-out dark:border-navy-border dark:shadow-none lg:translate-x-0"
+    data-sidebar-drawer inert aria-label="القائمة الجانبية">
 
-        {{-- Nav --}}
-        <nav class="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
+    {{-- Brand --}}
+    <div class="flex h-16 shrink-0 items-center gap-3 border-b border-slate-200 px-4 dark:border-navy-border">
+        <a href="{{ $homeUrl }}" class="flex min-w-0 items-center gap-3" aria-label="الصفحة الرئيسية">
+            <img src="{{ asset('images/logo.png') }}" alt="شعار المنصة"
+                class="size-10 shrink-0 rounded-xl object-cover shadow-brand">
+            <span class="sidebar-label min-w-0 truncate text-[15px] font-extrabold text-ink dark:text-mist">
+                {{ config('app.name', 'E Learning') }}
+            </span>
+        </a>
 
-            @if (auth()->user()->role == 'student')
-                <a href="{{ route('student.home') }}"
-                    class="flex items-center gap-3 px-3 py-3 rounded-2xl transition
-                        {{ request()->routeIs('student.home') ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-100 dark:shadow-indigo-900/50' : 'text-slate-500 dark:text-slate-400 hover:bg-indigo-50 dark:hover:bg-slate-700 hover:text-indigo-600 dark:hover:text-indigo-400' }}">
-                    <svg class="h-5 w-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-                    </svg>
-                    <span x-show="open" x-transition class="text-sm font-semibold whitespace-nowrap">الرئيسية</span>
-                </a>
-                <a href="{{ route('all-courses') }}"
-                    class="flex items-center gap-3 px-3 py-3 rounded-2xl transition
-                        {{ request()->routeIs('all-courses') ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-100 dark:shadow-indigo-900/50' : 'text-slate-500 dark:text-slate-400 hover:bg-indigo-50 dark:hover:bg-slate-700 hover:text-indigo-600 dark:hover:text-indigo-400' }}">
-                    <svg class="h-5 w-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                    </svg>
-                    <span x-show="open" x-transition class="text-sm font-semibold whitespace-nowrap">جميع
-                        الكورسات</span>
-                </a>
-                <a href="{{ route('courses') }}"
-                    class="flex items-center gap-3 px-3 py-3 rounded-2xl transition
-                        {{ request()->routeIs('courses') ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-100 dark:shadow-indigo-900/50' : 'text-slate-500 dark:text-slate-400 hover:bg-indigo-50 dark:hover:bg-slate-700 hover:text-indigo-600 dark:hover:text-indigo-400' }}">
-                    <svg class="h-5 w-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                    </svg>
-                    <span x-show="open" x-transition class="text-sm font-semibold whitespace-nowrap">كورساتي</span>
-                </a>
-            @endif
+        <button type="button" data-drawer-close aria-label="إغلاق القائمة الجانبية"
+            class="ms-auto inline-flex size-9 shrink-0 items-center justify-center rounded-xl text-ink-muted transition hover:bg-canvas hover:text-accent lg:hidden dark:hover:bg-white/5">
+            <i class="fa-solid fa-xmark text-lg" aria-hidden="true"></i>
+        </button>
+    </div>
 
-            @if (auth()->user()->role == 'instructor')
-                <a href="{{ route('instructor.dashboard') }}"
-                    class="flex items-center gap-3 px-3 py-3 rounded-2xl transition
-                        {{ request()->routeIs('instructor.dashboard') ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-100 dark:shadow-indigo-900/50' : 'text-slate-500 dark:text-slate-400 hover:bg-indigo-50 dark:hover:bg-slate-700 hover:text-indigo-600 dark:hover:text-indigo-400' }}">
-                    <svg class="h-5 w-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                    </svg>
-                    <span x-show="open" x-transition class="text-sm font-semibold whitespace-nowrap">لوحة التحكم</span>
-                </a>
-                <a href="{{ route('instructor.sections.create') }}"
-                    class="flex items-center gap-3 px-3 py-3 rounded-2xl transition
-                        {{ request()->routeIs('instructor.sections.create') ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-100 dark:shadow-indigo-900/50' : 'text-slate-500 dark:text-slate-400 hover:bg-indigo-50 dark:hover:bg-slate-700 hover:text-indigo-600 dark:hover:text-indigo-400' }}">
-                    <svg class="h-5 w-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                    </svg>
-                    <span x-show="open" x-transition class="text-sm font-semibold whitespace-nowrap">سيكشن</span>
-                </a>
-            @endif
+    {{-- Navigation --}}
+    <nav class="flex-1 overflow-x-hidden overflow-y-auto px-3 py-4" aria-label="روابط التنقل">
+        @include($menuPartial)
+    </nav>
 
-            @if (auth()->user()->role == 'admin')
-                <a href="{{ route('admin.dashboard') }}"
-                    class="flex items-center gap-3 px-3 py-3 rounded-2xl transition
-                        {{ request()->routeIs('admin.dashboard') ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-100 dark:shadow-indigo-900/50' : 'text-slate-500 dark:text-slate-400 hover:bg-indigo-50 dark:hover:bg-slate-700 hover:text-indigo-600 dark:hover:text-indigo-400' }}">
-                    <svg class="h-5 w-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                    </svg>
-                    <span x-show="open" x-transition class="text-sm font-semibold whitespace-nowrap">لوحة التحكم</span>
-                </a>
-                <a href="{{ route('admin.users.index') }}"
-                    class="flex items-center gap-3 px-3 py-3 rounded-2xl transition
-                        {{ request()->routeIs('admin.users.index') ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-100 dark:shadow-indigo-900/50' : 'text-slate-500 dark:text-slate-400 hover:bg-indigo-50 dark:hover:bg-slate-700 hover:text-indigo-600 dark:hover:text-indigo-400' }}">
-                    <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24"
-                        stroke-linecap="round" stroke-linejoin="round" height="16px" width="16px"
-                        xmlns="http://www.w3.org/2000/svg">
-                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                        <circle cx="9" cy="7" r="4"></circle>
-                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                    </svg>
-                    <span x-show="open" x-transition class="text-sm font-semibold whitespace-nowrap">جميع
-                        المستخدمين</span>
-                </a>
-                <a href="{{ route('admin.categories.index') }}"
-                    class="flex items-center gap-3 px-3 py-3 rounded-2xl transition
-                        {{ request()->routeIs('admin.categories.index') ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-100 dark:shadow-indigo-900/50' : 'text-slate-500 dark:text-slate-400 hover:bg-indigo-50 dark:hover:bg-slate-700 hover:text-indigo-600 dark:hover:text-indigo-400' }}">
-                    <svg class="h-5 w-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                    </svg>
-                    <span x-show="open" x-transition class="text-sm font-semibold whitespace-nowrap">category</span>
-                </a>
-            @endif
+    {{-- Desktop collapse toggle --}}
+    <div class="hidden shrink-0 border-t border-slate-200 px-3 py-3 lg:block dark:border-navy-border">
+        <button type="button" data-sidebar-toggle aria-expanded="true" aria-label="طي القائمة الجانبية"
+            class="flex min-h-11 w-full items-center justify-center gap-2 rounded-xl border border-slate-200 text-ink-muted transition hover:border-accent hover:bg-canvas hover:text-accent dark:border-navy-border dark:hover:bg-brand-500/10">
+            <i class="fa-solid fa-angles-right text-base" aria-hidden="true" data-sidebar-toggle-icon></i>
+            <span class="sidebar-label text-sm font-bold">طي القائمة</span>
+        </button>
+    </div>
 
-            <a href="{{ route('profile.show') }}"
-                class="flex items-center gap-3 px-3 py-3 rounded-2xl transition
-                    {{ request()->routeIs('profile.*') ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-100 dark:shadow-indigo-900/50' : 'text-slate-500 dark:text-slate-400 hover:bg-indigo-50 dark:hover:bg-slate-700 hover:text-indigo-600 dark:hover:text-indigo-400' }}">
-                <svg class="h-5 w-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                </svg>
-                <span x-show="open" x-transition class="text-sm font-semibold whitespace-nowrap">الملف الشخصي</span>
-            </a>
+    {{-- User card + logout --}}
+    <div class="shrink-0 border-t border-slate-200 p-3 dark:border-navy-border">
+        <div class="surface-muted flex items-center gap-3 p-2.5">
+            <span class="bg-accent-gradient relative flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-xl text-sm font-extrabold text-white">
+                <span class="absolute inset-0 flex items-center justify-center" aria-hidden="true">
+                    {{ \Illuminate\Support\Str::of($authUser->name)->substr(0, 1)->upper() }}
+                </span>
+                @if ($avatarUrl)
+                    <img src="{{ $avatarUrl }}" alt="{{ $authUser->name }}"
+                        class="relative size-full object-cover" loading="lazy" data-img-fallback>
+                @endif
+            </span>
 
-
-
-        </nav>
-
-        {{-- User card --}}
-        <div class="p-4 border-t border-gray-100 dark:border-slate-700">
-            <div class="flex items-center gap-3 p-3 bg-slate-50 dark:bg-slate-700/50 rounded-2xl">
-                <img src="https://ui-avatars.com/api/?name={{ urlencode(auth()->user()?->name ?? 'Guest') }}&background=6366f1&color=fff&bold=true"
-                    class="w-9 h-9 rounded-xl object-cover flex-shrink-0">
-                <div x-show="open" x-transition class="overflow-hidden flex-1">
-                    <p class="text-sm font-bold text-slate-800 dark:text-slate-200 truncate">
-                        {{ auth()->user()?->name ?? 'زائر' }}</p>
-                    <p class="text-xs text-slate-400 dark:text-slate-500 truncate">
-                        @if (auth()->user()?->role == 'admin')
-                            مدير
-                        @elseif(auth()->user()?->role == 'instructor')
-                            محاضر
-                        @else
-                            طالب
-                        @endif
-                    </p>
-                </div>
+            <div class="sidebar-label min-w-0 flex-1">
+                <p class="truncate text-sm font-extrabold text-ink dark:text-mist">{{ $authUser->name }}</p>
+                <p class="mt-0.5 flex items-center gap-1.5 truncate text-xs font-bold text-ink-muted">
+                    <i class="{{ $roleIcon }} text-[10px]" aria-hidden="true"></i>
+                    {{ $roleLabel }}
+                </p>
             </div>
         </div>
 
-    </aside>
+        <form method="POST" action="{{ Route::has('logout') ? route('logout') : '#' }}" data-confirm-logout
+            class="mt-2 w-full">
+            @csrf
+            <button type="submit"
+                class="flex min-h-11 w-full items-center justify-center gap-2 rounded-xl border border-rose-200 px-3 text-sm font-bold text-rose-600 transition hover:bg-rose-50 dark:border-rose-500/30 dark:text-rose-400 dark:hover:bg-rose-500/10">
+                <i class="fa-solid fa-right-from-bracket" aria-hidden="true"></i>
+                <span class="sidebar-label">تسجيل الخروج</span>
+            </button>
+        </form>
+    </div>
+</aside>
 
-    {{-- ══ MAIN ══ --}}
-    <main class="flex-1 p-8 min-w-0">
-        @include('layouts.partials.header')
-        <div
-            class="bg-white dark:bg-slate-800 p-8 rounded-3xl border border-gray-100 dark:border-slate-700 shadow-sm min-h-[calc(100vh-73px-4rem)] transition-colors duration-300">
-            @yield('content')
-        </div>
-        @include('layouts.partials.footer')
-    </main>
-
-</div>
+{{-- Mobile / tablet overlay --}}
+<div class="fixed inset-0 z-40 bg-ink/60 backdrop-blur-[2px] lg:hidden" data-drawer-overlay aria-hidden="true"></div>

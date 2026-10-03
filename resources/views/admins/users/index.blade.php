@@ -1,153 +1,166 @@
-@extends('layouts.master')
+@extends('layouts.app')
 
 @section('title', 'إدارة المستخدمين')
 
+@section('page-breadcrumb')
+    <a href="{{ Route::has('admin.dashboard') ? route('admin.dashboard') : url('/') }}"
+        class="transition hover:text-brand-600 dark:hover:text-brand-300">الرئيسية</a>
+    <i class="fa-solid fa-chevron-left text-[9px]" aria-hidden="true"></i>
+    <span class="text-brand-600 dark:text-brand-300">المستخدمون</span>
+@endsection
+
 @section('content')
-    <div class="min-h-screen bg-gray-50 dark:bg-[#0f172a] text-gray-800 dark:text-white p-4 lg:p-10 font-sans transition-colors duration-300"
-        dir="rtl">
+    <x-page-header title="إدارة الأعضاء والمستخدمين" icon="fa-solid fa-users"
+        description="التحكم في صلاحيات المستخدمين، وتفقد حساباتهم وحالاتهم داخل المنصة.">
+        <x-slot:actions>
+            <x-button icon="fa-solid fa-user-plus" :href="route('admin.users.create')">إضافة مستخدم</x-button>
+        </x-slot:actions>
+    </x-page-header>
 
-        {{-- HEADER --}}
-        <header class="mb-10">
-            <h1 class="text-3xl font-black text-gray-800 dark:text-white family-cairo">إدارة الأعضاء والمستخدمين 🛡️</h1>
-            <p class="text-gray-500 dark:text-slate-400 mt-1">التحكم في صلاحيات المستخدمين، تفقد حساباتهم وحالاتهم داخل
-                المنصة.</p>
-        </header>
+    <x-card :padded="false">
+        <x-slot:actions>
+            <x-badge variant="brand" icon="fa-solid fa-users">
+                {{ $users instanceof \Illuminate\Contracts\Pagination\Paginator ? $users->total() : $users->count() }}
+                مستخدم
+            </x-badge>
+        </x-slot:actions>
 
-        <x-success-component />
+        {{-- ══ جدول سطح المكتب ══ --}}
+        <div class="hidden md:block">
+            <x-data-table>
+                <x-slot:head>
+                    <tr>
+                        <th class="table-head-cell">المستخدم</th>
+                        <th class="table-head-cell text-center">الهاتف</th>
+                        <th class="table-head-cell text-center">الدور / الصلاحية</th>
+                        <th class="table-head-cell text-center">الحالة</th>
+                        <th class="table-head-cell text-end">الإجراءات</th>
+                    </tr>
+                </x-slot:head>
 
-        {{-- TABLE CONTAINER --}}
-        <div
-            class="bg-white dark:bg-slate-800 rounded-[40px] border border-gray-100 dark:border-slate-700 shadow-sm overflow-hidden mb-6">
+                @forelse ($users as $user)
+                    <tr class="transition-colors hover:bg-brand-50/40 dark:hover:bg-brand-500/5">
+                        <td class="table-body-cell">
+                            <div class="flex items-center gap-3">
+                                <a href="{{ route('admin.users.edit', $user) }}" class="shrink-0 transition hover:opacity-80">
+                                    <x-avatar :name="$user->name" size="h-12 w-12"
+                                        :image="$user->image" />
+                                </a>
 
-            {{-- TOP HEADER --}}
-            <div
-                class="p-8 border-b border-gray-100 dark:border-slate-700 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                <div>
-                    <h2 class="text-2xl font-black text-gray-800 dark:text-white mb-1">
-                        قائمة المسجلين الحاليين
-                    </h2>
-                    <p class="text-gray-500 dark:text-slate-400 text-sm">تفاصيل الأدوار، أرقام الهواتف، وحالة الحسابات.</p>
-                </div>
-
-                <button
-                    class="px-5 py-3 rounded-2xl bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-white font-bold hover:scale-105 transition-all">
-                    <i class="fa-solid fa-user-plus ml-2"></i>
-                    <a href="{{ route('admin.users.create') }}">
-                        اضافة مستخدم
-                    </a>
-
-                </button>
-            </div>
-
-            {{-- THE TABLE --}}
-            <div class="overflow-x-auto">
-                <table class="w-full text-right">
-                    <thead>
-                        <tr class="bg-gray-50 dark:bg-slate-900/50 border-b border-gray-100 dark:border-slate-700">
-                            <th class="p-6 text-xs uppercase tracking-[3px] text-gray-400 dark:text-slate-500 font-bold">
-                                المستخدم</th>
-                            <th
-                                class="p-6 text-center text-xs uppercase tracking-[3px] text-gray-400 dark:text-slate-500 font-bold">
-                                الهاتف</th>
-                            <th
-                                class="p-6 text-center text-xs uppercase tracking-[3px] text-gray-400 dark:text-slate-500 font-bold">
-                                الدور / الصلاحية</th>
-                            <th
-                                class="p-6 text-center text-xs uppercase tracking-[3px] text-gray-400 dark:text-slate-500 font-bold">
-                                الحالة</th>
-                            <th
-                                class="p-6 text-left text-xs uppercase tracking-[3px] text-gray-400 dark:text-slate-500 font-bold">
-                                الإجراءات</th>
-                        </tr>
-                    </thead>
-
-                    <tbody class="divide-y divide-gray-100 dark:divide-slate-700">
-                        @forelse ($users as $user)
-                            <tr>
-                                {{-- User Info --}}
-                                <td class="p-6 flex items-center gap-4 whitespace-nowrap">
-                                    <a href="{{ route('admin.users.show' , $user) }}">
-                                        <img src="{{ $user->image ? asset('storage/' . $user->image) : asset('assets/default-avatar.jpg') }}"
-                                            alt="{{ $user->name }}" class="w-12 h-12 rounded-lg object-cover">
-                                    </a>
-
-                                    <div>
-                                        <p class="text-sm font-bold text-gray-800 dark:text-white">{{ $user->name }}</p>
-                                        <p class="text-xs text-gray-500 dark:text-slate-400 mt-0.5"
-                                            style="user-select: all;">{{ $user->email }}</p>
-                                    </div>
-                                </td>
-
-                                {{-- Phone --}}
-                                <td class="p-6 text-center whitespace-nowrap">
-                                    <span class="text-sm font-bold text-gray-800 dark:text-white">{{ $user->phone }}</span>
-                                </td>
-
-                                {{-- Role Badges --}}
-                                <td class="p-6 text-center">
-                                    <span
-                                        class="px-3 py-1 rounded-full text-[10px] font-bold {{ $user->role == 'admin' ? 'bg-red-100 text-red-600' : ($user->role == 'instructor' ? 'bg-blue-100 text-blue-600' : 'bg-gray-100 text-gray-600') }}">
-                                        @if ($user->role == 'admin')
-                                            مدير
-                                        @elseif($user->role == 'instructor')
-                                            محاضر
-                                        @else
-                                            طالب
-                                        @endif
-                                    </span>
-                                </td>
-
-                                {{-- Status --}}
-                                <td class="p-6 text-center">
-                                    <span
-                                        class="px-3 py-1 rounded-full text-[10px] font-bold {{ $user->status == 'active' ? 'bg-green-100 text-green-600' : 'bg-amber-100 text-amber-600' }}">
-                                        {{ $user->status == 'active' ? 'نشط' : 'معطل' }}
-                                    </span>
-                                </td>
-
-                                {{-- Actions --}}
-                                <td class="p-6 text-left flex items-center gap-3 whitespace-nowrap">
-                                    <a href="{{ route('admin.users.edit', $user) }}"
-                                        class="px-3 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg text-sm font-bold transition-all">
-                                        تعديل
-                                    </a>
-
-                                    <form action="{{ route('admin.users.destroy', $user) }}" method="POST"
-                                        onsubmit="return confirm('هل أنت متأكد أنك تريد حذف هذا المستخدم نهائياً؟');"
-                                        class="inline">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit"
-                                            class="px-3 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg text-sm font-bold transition-all">
-                                            حذف
-                                        </button>
-                                    </form>
-                                </td>
-                            </tr>
-                        @empty
-                            {{-- EMPTY STATE --}}
-                            <tr>
-                                <td colspan="5" class="p-16 text-center">
-                                    <div
-                                        class="w-24 h-24 rounded-full bg-indigo-500/10 text-indigo-500 flex items-center justify-center mx-auto mb-6">
-                                        <i class="fa-solid fa-users-slash text-4xl"></i>
-                                    </div>
-                                    <h3 class="text-2xl font-black text-gray-800 dark:text-white mb-2">لا يوجد مستخدمين
-                                        مسجلين</h3>
-                                    <p class="text-gray-500 dark:text-slate-400">لم يقم أي عضو بالتسجيل في المنصة حتى الآن.
+                                <div class="min-w-0">
+                                    <p class="truncate font-extrabold text-ink dark:text-white">{{ $user->name }}</p>
+                                    <p class="truncate text-xs text-slate-500 dark:text-slate-400" dir="ltr">
+                                        {{ $user->email }}
                                     </p>
-                                </td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
-            </div>
+                                </div>
+                            </div>
+                        </td>
+
+                        <td class="table-body-cell text-center font-bold whitespace-nowrap" dir="ltr">
+                            {{ $user->phone }}
+                        </td>
+
+                        <td class="table-body-cell text-center">
+                            @if ($user->role == 'admin')
+                                <x-badge variant="danger" dot>مدير</x-badge>
+                            @elseif ($user->role == 'instructor')
+                                <x-badge variant="info" dot>محاضر</x-badge>
+                            @else
+                                <x-badge variant="neutral" dot>طالب</x-badge>
+                            @endif
+                        </td>
+
+                        <td class="table-body-cell text-center">
+                            @if ($user->status == 'active')
+                                <x-badge variant="success" dot>نشط</x-badge>
+                            @else
+                                <x-badge variant="warning" dot>معطل</x-badge>
+                            @endif
+                        </td>
+
+                        <td class="table-body-cell">
+                            <div class="flex items-center justify-end gap-2">
+                                <x-button variant="secondary" size="sm" icon="fa-solid fa-pen"
+                                    :href="route('admin.users.edit', $user)">تعديل</x-button>
+
+                                <form method="POST" action="{{ route('admin.users.destroy', $user) }}"
+                                    data-confirm="هل أنت متأكد أنك تريد حذف المستخدم ({{ $user->name }}) نهائياً؟">
+                                    @csrf
+                                    @method('DELETE')
+                                    <x-button type="submit" variant="danger" size="sm" icon="fa-solid fa-trash">
+                                        حذف
+                                    </x-button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="5" class="px-4 py-14">
+                            <x-empty-state title="لا يوجد مستخدمون مسجلون"
+                                description="لم يقم أي عضو بالتسجيل في المنصة حتى الآن." icon="fa-solid fa-users-slash" />
+                        </td>
+                    </tr>
+                @endforelse
+            </x-data-table>
         </div>
 
-        {{-- PAGINATION LINKS --}}
-        <div class="mt-6">
-            {{ $users->links() }}
+        {{-- ══ بطاقات الموبايل ══ --}}
+        <div class="grid grid-cols-1 gap-3 p-4 sm:grid-cols-2 md:hidden">
+            @forelse ($users as $user)
+                <article class="surface-muted p-4">
+                    <div class="flex items-start gap-3">
+                        <x-avatar :name="$user->name" size="h-12 w-12"
+                            :image="$user->image" />
+                        <div class="min-w-0 flex-1">
+                            <p class="truncate font-extrabold text-ink dark:text-white">{{ $user->name }}</p>
+                            <p class="truncate text-xs text-slate-500 dark:text-slate-400" dir="ltr">{{ $user->email }}</p>
+                            <p class="mt-1 truncate text-xs font-bold text-slate-500 dark:text-slate-400" dir="ltr">
+                                {{ $user->phone }}
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="mt-3 flex flex-wrap items-center gap-2">
+                        @if ($user->role == 'admin')
+                            <x-badge variant="danger" dot>مدير</x-badge>
+                        @elseif ($user->role == 'instructor')
+                            <x-badge variant="info" dot>محاضر</x-badge>
+                        @else
+                            <x-badge variant="neutral" dot>طالب</x-badge>
+                        @endif
+
+                        @if ($user->status == 'active')
+                            <x-badge variant="success" dot>نشط</x-badge>
+                        @else
+                            <x-badge variant="warning" dot>معطل</x-badge>
+                        @endif
+                    </div>
+
+                    <div class="mt-4 flex items-center gap-2">
+                        <x-button variant="secondary" size="sm" icon="fa-solid fa-pen" block
+                            :href="route('admin.users.edit', $user)">تعديل</x-button>
+
+                        <form method="POST" action="{{ route('admin.users.destroy', $user) }}"
+                            data-confirm="هل أنت متأكد أنك تريد حذف المستخدم ({{ $user->name }}) نهائياً؟" class="flex-1">
+                            @csrf
+                            @method('DELETE')
+                            <x-button type="submit" variant="danger" size="sm" icon="fa-solid fa-trash" block>
+                                حذف
+                            </x-button>
+                        </form>
+                    </div>
+                </article>
+            @empty
+                <x-empty-state title="لا يوجد مستخدمون مسجلون" description="لم يقم أي عضو بالتسجيل في المنصة حتى الآن."
+                    icon="fa-solid fa-users-slash" />
+            @endforelse
         </div>
 
-    </div>
+        @if (method_exists($users, 'links') && $users->hasPages())
+            <x-slot:footer>
+                <div class="flex justify-center">{{ $users->links() }}</div>
+            </x-slot:footer>
+        @endif
+    </x-card>
 @endsection

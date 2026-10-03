@@ -21,17 +21,31 @@ class DashboardService
         ];
     }
 
-    public function adminStats(): array
-    {
-        return [
-            'users'              => User::where('role', 'student')->latest()->take(10)->get(),
-            'total_users'        => User::count(),
-            'total_courses'      => Course::count(),
-            'total_enrollments'  => Enrollment::count(),
-            // لو الـ price فاضي في الاشتراكات القديمة ناخد سعر الكورس
-            'total_revenue'      => Enrollment::join('courses', 'enrollments.course_id', '=', 'courses.id')
-                ->sum(DB::raw('COALESCE(enrollments.price, courses.price)')),
-            'recent_enrollments' => Enrollment::with('student', 'course')->latest()->take(10)->get(),
-        ];
-    }
+public function adminStats(): array
+{
+    return [
+        'users' => User::query()
+            ->latest()
+            ->take(10)
+            ->get(['id', 'name', 'image', 'role', 'created_at']),
+
+        'total_users'       => User::count(),
+        'total_courses'     => Course::count(),
+        'total_enrollments' => Enrollment::count(),
+
+        // السعر وقت الاشتراك، وللقديم ناخد سعر الكورس
+        'total_revenue' => (float) Enrollment::query()
+            ->leftJoin('courses', 'enrollments.course_id', '=', 'courses.id')
+            ->sum(DB::raw('COALESCE(enrollments.price, courses.price, 0)')),
+
+        'recent_enrollments' => Enrollment::query()
+    ->with([
+        'student:id,name,image',
+        'course:id,title,price',
+    ])
+    ->latest()
+    ->take(10)
+    ->get(),
+    ];
+}
 }

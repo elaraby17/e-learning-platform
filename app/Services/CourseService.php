@@ -1,5 +1,5 @@
 <?php
-// app/Services/CourseService.php
+
 namespace App\Services;
 
 use App\Models\Category;
@@ -12,16 +12,25 @@ class CourseService
 {
     public function publishedCategories()
     {
-        return Category::whereHas('courses', fn ($q) => $q->where('status', 'published'))->get();
+        return Category::whereHas(
+            'courses',
+            fn ($q) => $q->where('status', 'published')
+        )->get();
     }
 
-    public function paginatePublished(?string $categorySlug = null, int $perPage = 10)
-    {
+    public function paginatePublished(
+        ?string $categorySlug = null,
+        int $perPage = 10
+    ) {
         return Course::with(['instructor', 'category'])
             ->where('status', 'published')
-            ->when($categorySlug, fn ($q) => $q->whereHas(
-                'category', fn ($c) => $c->where('slug', $categorySlug)
-            ))
+            ->when(
+                $categorySlug,
+                fn ($q) => $q->whereHas(
+                    'category',
+                    fn ($c) => $c->where('slug', $categorySlug)
+                )
+            )
             ->paginate($perPage)
             ->withQueryString();
     }
@@ -30,7 +39,8 @@ class CourseService
     {
         $data = $this->handleImage($data);
 
-        // الأدمن بس هو اللي يختار instructor، الـ instructor دايماً نفسه
+        // Admin can choose an instructor.
+        // Instructor is always assigned to himself.
         $data['instructor_id'] = $actor->role === 'admin'
             ? ($data['instructor_id'] ?? $actor->id)
             : $actor->id;
@@ -38,10 +48,17 @@ class CourseService
         return Course::create($data);
     }
 
-    public function update(Course $course, array $data, User $actor): Course
-    {
-        $data = $this->handleImage($data, $course->image);
+    public function update(
+        Course $course,
+        array $data,
+        User $actor
+    ): Course {
+        $data = $this->handleImage(
+            $data,
+            $course->image
+        );
 
+        // Instructor cannot change the course instructor.
         if ($actor->role !== 'admin') {
             unset($data['instructor_id']);
         }
@@ -60,13 +77,19 @@ class CourseService
         $course->delete();
     }
 
-    private function handleImage(array $data, ?string $oldPath = null): array
-    {
+    private function handleImage(
+        array $data,
+        ?string $oldPath = null
+    ): array {
         if (($data['image'] ?? null) instanceof UploadedFile) {
+
             if ($oldPath) {
                 Storage::disk('public')->delete($oldPath);
             }
-            $data['image'] = $data['image']->store('course_images', 'public');
+
+            $data['image'] = $data['image']
+                ->store('course_images', 'public');
+
         } else {
             unset($data['image']);
         }

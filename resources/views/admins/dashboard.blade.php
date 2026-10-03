@@ -1,149 +1,237 @@
-@extends('layouts.master')
+@extends('layouts.app')
 
-@section('title', 'Admin Dashboard')
+@section('title', 'لوحة التحكم')
+
 @section('content')
-<div class="min-h-screen bg-[#f8f9fa] dark:bg-slate-800  text-zinc-800 dark:text-zinc-100 p-4 lg:p-10 font-sans transition-colors duration-300" dir="rtl">
+    {{-- ══ Hero تدرّج بلون دور الأدمن ══ --}}
+    <x-page-hero icon="fa-solid fa-shield-halved" eyebrow="مدير النظام" greeting="أهلاً بك"
+        :name="auth()->user()->name"
+        message="لديك نظرة سريعة على أداء المنصة: المستخدمون، الكورسات، الاشتراكات، والإيرادات.">
+        <x-slot:actions>
+            @if (Route::has('admin.users.create'))
+                <x-button size="lg" class="bg-white! text-ink! shadow-card hover:bg-white/90"
+                    icon="fa-solid fa-user-plus" :href="route('admin.users.create')">مستخدم جديد</x-button>
+            @endif
+            @if (Route::has('admin.courses.index'))
+                <x-button size="lg" variant="secondary" class="border-white/40! bg-white/10! text-white! hover:bg-white/20!"
+                    icon="fa-solid fa-layer-group" :href="route('admin.courses.index')">إدارة الكورسات</x-button>
+            @endif
+        </x-slot:actions>
 
-    <header class="mb-10">
-        <h1 class="text-3xl font-black text-gray-800 dark:text-white family-cairo">لوحة التحكم الإدارية 🛡️</h1>
-        <p class="text-gray-500 dark:text-zinc-400 mt-1">مرحباً بك مجدداً، إليك ملخص نشاط المنصة بالكامل.</p>
-    </header>
-        <x-success-component />
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
-        <div class="bg-white dark:bg-zinc-900/50 backdrop-blur-md p-6 rounded-[32px] border border-gray-100 dark:border-zinc-800/80 shadow-sm transition-transform hover:scale-105 group">
-            <div class="flex justify-between items-start mb-4">
-                <div class="w-12 h-12 bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 rounded-2xl flex items-center justify-center text-xl border border-indigo-100 dark:border-indigo-500/20 group-hover:bg-indigo-500 group-hover:text-white transition-all duration-300">
-                    <i class="fa-solid fa-users"></i>
-                </div>
-                <span class="text-green-500 dark:text-emerald-400 text-xs font-bold bg-green-50 dark:bg-emerald-500/10 border border-green-200 dark:border-emerald-500/20 px-2 py-1 rounded-lg">+12%</span>
+        <x-slot:footer>
+            <div class="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm font-bold text-white/85">
+                <span class="flex items-center gap-2">
+                    <i class="fa-solid fa-users text-brand-200" aria-hidden="true"></i>
+                    {{ $total_users ?? 0 }} مستخدم
+                </span>
+                <span class="flex items-center gap-2">
+                    <i class="fa-solid fa-graduation-cap text-brand-200" aria-hidden="true"></i>
+                    {{ $total_courses ?? 0 }} كورس
+                </span>
+                <span class="flex items-center gap-2">
+                    <i class="fa-regular fa-calendar text-brand-200" aria-hidden="true"></i>
+                    {{ now()->locale('ar')->isoFormat('dddd، D MMMM YYYY') }}
+                </span>
             </div>
-            <p class="text-gray-400 dark:text-zinc-400 font-bold text-xs uppercase tracking-widest">إجمالي المستخدمين</p>
-            <h3 class="text-2xl font-black text-gray-800 dark:text-white mt-1">{{ $total_users ?? 0 }}</h3>
-        </div>
+        </x-slot:footer>
+    </x-page-hero>
 
-        <div class="bg-white dark:bg-zinc-900/50 backdrop-blur-md p-6 rounded-[32px] border border-gray-100 dark:border-zinc-800/80 shadow-sm transition-transform hover:scale-105 group">
-            <div class="flex justify-between items-start mb-4">
-                <div class="w-12 h-12 bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 rounded-2xl flex items-center justify-center text-xl border border-blue-100 dark:border-blue-500/20 group-hover:bg-blue-500 group-hover:text-white transition-all duration-300">
-                    <i class="fa-solid fa-graduation-cap"></i>
-                </div>
-            </div>
-            <p class="text-gray-400 dark:text-zinc-400 font-bold text-xs uppercase tracking-widest">إجمالي الكورسات</p>
-            <h3 class="text-2xl font-black text-gray-800 dark:text-white mt-1">{{ $total_courses ?? 0 }}</h3>
-        </div>
+    {{-- ══ KPIs ══ --}}
+    <div class="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <x-stat-card title="إجمالي المستخدمين" icon="fa-solid fa-users" tone="brand" trend="+12%"
+            trend-note="عن الشهر الماضي" :sparkline="[38, 46, 44, 58, 66, 78, 92]">
+            {{ $total_users ?? 0 }}
+        </x-stat-card>
 
-        <div class="bg-white dark:bg-zinc-900/50 backdrop-blur-md p-6 rounded-[32px] border border-gray-100 dark:border-zinc-800/80 shadow-sm transition-transform hover:scale-105 group">
-            <div class="flex justify-between items-start mb-4">
-                <div class="w-12 h-12 bg-purple-50 dark:bg-purple-500/10 text-purple-600 dark:text-purple-400 rounded-2xl flex items-center justify-center text-xl border border-purple-100 dark:border-purple-500/20 group-hover:bg-purple-500 group-hover:text-white transition-all duration-300">
-                    <i class="fa-solid fa-user-plus"></i>
-                </div>
-            </div>
-            <p class="text-gray-400 dark:text-zinc-400 font-bold text-xs uppercase tracking-widest">إجمالي التسجيلات</p>
-            <h3 class="text-2xl font-black text-gray-800 dark:text-white mt-1">{{ $total_enrollments ?? 0 }}</h3>
-        </div>
+        <x-stat-card title="إجمالي الكورسات" icon="fa-solid fa-graduation-cap" tone="violet" trend="+8%"
+            trend-note="هذا الشهر" :sparkline="[22, 30, 34, 33, 45, 52, 60]">
+            {{ $total_courses ?? 0 }}
+        </x-stat-card>
 
-        <div class="bg-white dark:bg-zinc-900/50 backdrop-blur-md p-6 rounded-[32px] border border-gray-100 dark:border-zinc-800/80 shadow-sm transition-transform hover:scale-105 group">
-            <div class="flex justify-between items-start mb-4">
-                <div class="w-12 h-12 bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 rounded-2xl flex items-center justify-center text-xl border border-emerald-100 dark:border-emerald-500/20 group-hover:bg-emerald-500 group-hover:text-white transition-all duration-300">
-                    <i class="fa-solid fa-money-bill-trend-up"></i>
-                </div>
-            </div>
-            <p class="text-gray-400 dark:text-zinc-400 font-bold text-xs uppercase tracking-widest">إجمالي الأرباح</p>
-            <h3 class="text-2xl font-black text-gray-800 dark:text-white mt-1">${{ number_format($total_revenue ?? 0, 2) }}</h3>
-        </div>
+        <x-stat-card title="إجمالي التسجيلات" icon="fa-solid fa-user-plus" tone="emerald" trend="+21%"
+            trend-note="مقارنة بالشهر السابق" :sparkline="[18, 24, 30, 28, 44, 52, 68]">
+            {{ $total_enrollments ?? 0 }}
+        </x-stat-card>
+
+        <x-stat-card title="إجمالي الأرباح" icon="fa-solid fa-sack-dollar" tone="sun" trend="+15%"
+            trend-note="إيرادات متزايدة" :sparkline="[25, 32, 30, 40, 48, 55, 70]">
+            ${{ number_format($total_revenue ?? 0, 2) }}
+        </x-stat-card>
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-10">
+    {{-- ══ Tables ══ --}}
+  <div class="mt-6 grid grid-cols-1 gap-6 xl:grid-cols-2">
 
-        <div class="bg-white dark:bg-zinc-900/30 backdrop-blur-md rounded-[40px] shadow-sm border border-gray-100 dark:border-zinc-800/80 overflow-hidden">
-            <div class="p-6 border-b border-gray-50 dark:border-zinc-800/60 flex justify-between items-center bg-gray-50/30 dark:bg-zinc-900/20">
-                <h2 class="text-xl font-bold text-gray-800 dark:text-white">أحدث المسجلين</h2>
-                <a href="#" class="text-indigo-600 dark:text-indigo-400 text-sm font-bold hover:underline">عرض الكل</a>
-            </div>
-            <div class="overflow-x-auto">
-                <table class="w-full text-right text-sm">
-                    <thead class="bg-gray-50/50 dark:bg-zinc-900/60 text-gray-500 dark:text-zinc-400 border-b border-gray-100 dark:border-zinc-800/40">
-                        <tr>
-                            <th class="p-4 font-bold">المستخدم</th>
-                            <th class="p-4 font-bold">التاريخ</th>
-                            <th class="p-4 font-bold">الدور</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-gray-50 dark:divide-zinc-800/40">
-                        @foreach($users as $user)
-                        <tr class="hover:bg-gray-50/30 dark:hover:bg-zinc-800/20 transition-colors">
-                            <td class="p-4 font-semibold text-gray-700 dark:text-zinc-200">{{ $user->name }}</td>
-                            <td class="p-4 text-gray-500 dark:text-zinc-400">{{ $user->created_at->format('Y-m-d') }}</td>
-                            <td class="p-4">
-                                <span class="px-3 py-1 rounded-full text-[10px] font-bold tracking-wider {{ $user->role == 'admin' ? 'bg-red-100 text-red-600 dark:bg-rose-500/10 dark:text-rose-400 border border-rose-200 dark:border-rose-500/20' : ($user->role == 'instructor' ? 'bg-blue-100 text-blue-600 dark:bg-blue-500/10 dark:text-blue-400 border border-blue-200 dark:border-blue-500/20' : 'bg-gray-100 text-gray-600 dark:bg-zinc-700/30 dark:text-zinc-400 border border-gray-200 dark:border-zinc-700/20') }}">
-                                    {{ strtoupper($user->role) }}
+    {{-- ===================== أحدث المسجلين ===================== --}}
+    <x-card title="أحدث المسجلين" description="آخر 10 حسابات تم تسجيلها"
+            icon="fa-solid fa-user-clock" :padded="false">
+
+        <x-slot:actions>
+            @if (Route::has('admin.users.index'))
+                <x-button variant="ghost" size="sm" icon="fa-solid fa-arrow-left"
+                          :href="route('admin.users.index')">
+                    عرض الكل
+                </x-button>
+            @endif
+        </x-slot:actions>
+
+        <x-data-table>
+            <x-slot:head>
+                <tr>
+                    <th class="table-head-cell">المستخدم</th>
+                    <th class="table-head-cell whitespace-nowrap">تاريخ التسجيل</th>
+                    <th class="table-head-cell text-end">الدور</th>
+                </tr>
+            </x-slot:head>
+
+            @forelse ($users as $user)
+                <tr>
+                    <td class="table-body-cell">
+                        <div class="flex min-w-0 items-center gap-3">
+                            <x-avatar :name="$user->name" size="h-10 w-10" :image="$user->image" />
+                            <div class="min-w-0">
+                                <p class="truncate font-extrabold">{{ $user->name }}</p>
+                                <p class="text-xs text-ink-muted">#{{ $user->id }}</p>
+                            </div>
+                        </div>
+                    </td>
+
+                    <td class="table-body-cell whitespace-nowrap">
+                        <p class="text-sm font-bold" dir="ltr">
+                            {{ $user->created_at?->format('Y-m-d') }}
+                        </p>
+                        <p class="text-xs text-ink-muted">
+                            {{ $user->created_at?->diffForHumans() }}
+                        </p>
+                    </td>
+
+                    <td class="table-body-cell text-end">
+                        @switch($user->role)
+                            @case('admin')
+                                <x-badge variant="danger" dot>مدير</x-badge>
+                                @break
+                            @case('instructor')
+                                <x-badge variant="info" dot>محاضر</x-badge>
+                                @break
+                            @default
+                                <x-badge variant="neutral" dot>طالب</x-badge>
+                        @endswitch
+                    </td>
+                </tr>
+            @empty
+                <tr>
+                    <td colspan="3" class="px-4 py-10">
+                        <x-empty-state title="لا يوجد مستخدمون جدد"
+                                       description="لا حسابات مسجلة حالياً."
+                                       icon="fa-solid fa-user-slash" />
+                    </td>
+                </tr>
+            @endforelse
+        </x-data-table>
+    </x-card>
+
+    {{-- ===================== أحدث الاشتراكات ===================== --}}
+    <x-card title="أحدث الاشتراكات" description="آخر 10 اشتراكات في الكورسات"
+            icon="fa-solid fa-receipt" :padded="false">
+
+        <x-data-table>
+            <x-slot:head>
+                <tr>
+                    <th class="table-head-cell">الطالب</th>
+                    <th class="table-head-cell">الكورس</th>
+                    <th class="table-head-cell text-end">السعر</th>
+                </tr>
+            </x-slot:head>
+
+            @forelse ($recent_enrollments as $enrollment)
+                @php
+                    $student = $enrollment->student;
+                    $course  = $enrollment->course;
+                    $name    = $student?->name ?? 'طالب محذوف';
+                    $price   = $enrollment->price_paid ?? $course?->price;
+                @endphp
+
+                <tr>
+                    {{-- الطالب --}}
+                    <td class="table-body-cell">
+                        <div class="flex min-w-0 items-center gap-3">
+                            @if ($student)
+                                <x-avatar :name="$name" size="h-10 w-10" :image="$student->image" />
+                            @else
+                                <span class="grid size-10 shrink-0 place-items-center rounded-full bg-slate-100 text-slate-400 dark:bg-white/5">
+                                    <i class="fa-solid fa-user-slash text-xs"></i>
                                 </span>
-                            </td>
-                        </tr>
-                        @endforeach
-                        <tr>
-                            <td class="p-4 text-center text-gray-400 dark:text-zinc-500 italic" colspan="3">
-                                لا يوجد مستخدمين جدد حالياً.
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+                            @endif
 
-        <div class="bg-white dark:bg-zinc-900/30 backdrop-blur-md rounded-[40px] shadow-sm border border-gray-100 dark:border-zinc-800/80 overflow-hidden">
-            <div class="p-6 border-b border-gray-50 dark:border-zinc-800/60 flex justify-between items-center bg-gray-50/30 dark:bg-zinc-900/20">
-                <h2 class="text-xl font-bold text-gray-800 dark:text-white">أحدث الاشتراكات</h2>
-            </div>
-            <div class="overflow-x-auto">
-                <table class="w-full text-right text-sm">
-                    <thead class="bg-gray-50/50 dark:bg-zinc-900/60 text-gray-500 dark:text-zinc-400 border-b border-gray-100 dark:border-zinc-800/40">
-                        <tr>
-                            <th class="p-4 font-bold">الطالب</th>
-                            <th class="p-4 font-bold">الكورس</th>
-                            <th class="p-4 font-bold text-left">السعر</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-gray-50 dark:divide-zinc-800/40">
-                        @foreach($recent_enrollments as $enrollment)
-                        <tr class="hover:bg-gray-50/30 dark:hover:bg-zinc-800/20 transition-colors">
-                            {{-- حماية الكود من أخطاء الـ null السابقة --}}
-                            <td class="p-4 text-gray-700 dark:text-zinc-200">{{ $enrollment->student->name ?? 'طالب محذوف' }}</td>
-                            <td class="p-4 text-indigo-600 dark:text-indigo-400 font-medium">{{ $enrollment->course->title }}</td>
-                            <td class="p-4 text-left font-bold text-gray-800 dark:text-zinc-100">${{ $enrollment->course->price }}</td>
-                        </tr>
-                        @endforeach
-                        <tr>
-                            <td class="p-4 text-center text-gray-400 dark:text-zinc-500 italic" colspan="3">
-                                لا توجد اشتراكات جديدة حالياً.
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
+                            <div class="min-w-0">
+                                <p @class([
+                                    'truncate font-extrabold',
+                                    'italic text-ink-muted' => ! $student,
+                                ])>{{ $name }}</p>
+                                <p class="text-xs text-ink-muted">
+                                    {{ $enrollment->created_at?->diffForHumans() }}
+                                </p>
+                            </div>
+                        </div>
+                    </td>
 
-    <div class="bg-gradient-to-br from-indigo-900 via-indigo-950 to-slate-900 dark:from-zinc-900 dark:via-indigo-950/40 dark:to-zinc-900 rounded-[40px] p-8 text-white border border-indigo-950 dark:border-zinc-800/60 shadow-xl relative overflow-hidden">
-        <div class="absolute top-0 right-0 w-64 h-64 bg-indigo-500/10 dark:bg-indigo-500/5 rounded-full blur-[80px] pointer-events-none"></div>
-        <h2 class="text-xl font-bold mb-6">روابط سريعة للملحقات</h2>
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 relative z-10">
-            <a href="#" class="bg-white/10 dark:bg-zinc-900/60 hover:bg-white/20 dark:hover:bg-indigo-600/10 p-4 rounded-2xl flex flex-col items-center gap-2 border border-white/5 dark:border-zinc-800 hover:border-white/20 dark:hover:border-indigo-500/40 transition-all duration-300 group">
-                <i class="fa-solid fa-user-gear text-xl text-indigo-200 dark:text-zinc-400 group-hover:text-white dark:group-hover:text-indigo-400 transition-colors"></i>
-                <span class="text-sm font-bold">إدارة المستخدمين</span>
-            </a>
-            <a href="#" class="bg-white/10 dark:bg-zinc-900/60 hover:bg-white/20 dark:hover:bg-indigo-600/10 p-4 rounded-2xl flex flex-col items-center gap-2 border border-white/5 dark:border-zinc-800 hover:border-white/20 dark:hover:border-indigo-500/40 transition-all duration-300 group">
-                <i class="fa-solid fa-layer-group text-xl text-indigo-200 dark:text-zinc-400 group-hover:text-white dark:group-hover:text-indigo-400 transition-colors"></i>
-                <span class="text-sm font-bold">إدارة الكورسات</span>
-            </a>
-            <a href="#" class="bg-white/10 dark:bg-zinc-900/60 hover:bg-white/20 dark:hover:bg-indigo-600/10 p-4 rounded-2xl flex flex-col items-center gap-2 border border-white/5 dark:border-zinc-800 hover:border-white/20 dark:hover:border-indigo-500/40 transition-all duration-300 group">
-                <i class="fa-solid fa-list-check text-xl text-indigo-200 dark:text-zinc-400 group-hover:text-white dark:group-hover:text-indigo-400 transition-colors"></i>
-                <span class="text-sm font-bold">التصنيفات</span>
-            </a>
-            <a href="#" class="bg-white/10 dark:bg-zinc-900/60 hover:bg-white/20 dark:hover:bg-indigo-600/10 p-4 rounded-2xl flex flex-col items-center gap-2 border border-white/5 dark:border-zinc-800 hover:border-white/20 dark:hover:border-indigo-500/40 transition-all duration-300 group">
-                <i class="fa-solid fa-gears text-xl text-indigo-200 dark:text-zinc-400 group-hover:text-white dark:group-hover:text-indigo-400 transition-colors"></i>
-                <span class="text-sm font-bold">إعدادات النظام</span>
-            </a>
-        </div>
-    </div>
+                    {{-- الكورس --}}
+                    <td class="table-body-cell">
+                        <span class="line-clamp-2 max-w-[14rem] font-extrabold text-accent">
+                            {{ $course?->title ?? 'كورس محذوف' }}
+                        </span>
+                    </td>
+
+                    {{-- السعر --}}
+                    <td class="table-body-cell text-end whitespace-nowrap">
+                        @if ($price === null)
+                            <span class="text-ink-muted">—</span>
+                        @elseif ($price > 0)
+                            <span class="font-extrabold" dir="ltr">${{ number_format($price, 2) }}</span>
+                        @else
+                            <x-badge variant="success" dot>مجاني</x-badge>
+                        @endif
+                    </td>
+                </tr>
+            @empty
+                <tr>
+                    <td colspan="3" class="px-4 py-10">
+                        <x-empty-state title="لا توجد اشتراكات"
+                                       description="لا توجد اشتراكات جديدة حالياً."
+                                       icon="fa-solid fa-receipt" />
+                    </td>
+                </tr>
+            @endforelse
+        </x-data-table>
+    </x-card>
 </div>
+
+    {{-- ══ Quick links ══ --}}
+    <div class="surface-card mt-6 overflow-hidden p-6 sm:p-8">
+        <h2 class="mb-5 flex items-center gap-2 text-lg font-extrabold text-ink dark:text-mist">
+            <span class="icon-box bg-accent-gradient text-white shadow-accent">
+                <i class="fa-solid fa-compass" aria-hidden="true"></i>
+            </span>
+            روابط سريعة
+        </h2>
+
+        <div class="grid grid-cols-2 gap-3 lg:grid-cols-4">
+            @foreach ([
+                ['route' => 'admin.users.index', 'icon' => 'fa-solid fa-users-gear', 'label' => 'إدارة المستخدمين'],
+                ['route' => 'admin.courses.index', 'icon' => 'fa-solid fa-layer-group', 'label' => 'إدارة الكورسات'],
+                ['route' => 'admin.categories.index', 'icon' => 'fa-solid fa-list-check', 'label' => 'التصنيفات'],
+                ['route' => 'admin.dashboard', 'icon' => 'fa-solid fa-gears', 'label' => 'لوحة النظام'],
+            ] as $shortcut)
+                @if (Route::has($shortcut['route']))
+                    <a href="{{ route($shortcut['route']) }}"
+                        class="group flex flex-col items-center gap-2 rounded-2xl border border-slate-200 bg-canvas p-4 text-center transition hover:-translate-y-0.5 hover:border-accent hover:bg-white hover:shadow-accent dark:border-navy-border dark:bg-navy/40 dark:hover:border-accent dark:hover:bg-navy-elevated">
+                        <span class="bg-accent-gradient flex size-11 items-center justify-center rounded-xl text-white shadow-accent transition group-hover:scale-110">
+                            <i class="{{ $shortcut['icon'] }}" aria-hidden="true"></i>
+                        </span>
+                        <span class="text-sm font-extrabold text-ink dark:text-mist">{{ $shortcut['label'] }}</span>
+                    </a>
+                @endif
+            @endforeach
+        </div>
+    </div>
 @endsection
