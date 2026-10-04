@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class CourseRequest extends FormRequest
 {
@@ -28,10 +29,9 @@ class CourseRequest extends FormRequest
             'short_description' => 'nullable|string',
             'category_id' => 'required|exists:categories,id',
 
-            // 🌟 ضيف السطر ده هنا 🌟
-            'instructor_id' => 'required|exists:users,id',
+            'instructor_id' => ['required', Rule::exists('users', 'id')->whereIn('role', ['instructor', 'admin'])],
 
-            'status' => 'required|in:draft,published', // حسب الحالات عندك
+            'status' => 'required|in:draft,published',
             'price' => 'required|numeric|min:0',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
         ];

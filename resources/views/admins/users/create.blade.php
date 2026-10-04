@@ -71,9 +71,9 @@
                 description="تحديد مستوى الوصول للنظام وإنشاء كلمة مرور قوية.">
                 <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
                     <x-select name="role" label="الصلاحية (Role)" required>
-                        <option value="user" @selected(old('role') == 'user')>طالب (User)</option>
+                        <option value="student" @selected(old('role', 'student') == 'student')>طالب (Student)</option>
                         <option value="instructor" @selected(old('role') == 'instructor')>مدرس (Instructor)</option>
-                        <option value="admin" @selected(old('role', 'admin') == 'admin')>مدير (Admin)</option>
+                        <option value="admin" @selected(old('role') == 'admin')>مدير (Admin)</option>
                     </x-select>
 
                     <x-select name="status" label="حالة الحساب" required>

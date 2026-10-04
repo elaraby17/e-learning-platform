@@ -5,32 +5,28 @@ namespace App\Providers;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\RateLimiter;
-use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
-    /**
-     * Register any application services.
-     */
     public function register(): void
     {
         //
     }
 
-    /**
-     * Bootstrap any application services.
-     */
     public function boot(): void
     {
-         if (app()->environment('production')) {
-        URL::forceHttps();
-    }
+        if (app()->environment('production')) {
+            URL::forceHttps();
+        }
+
         Paginator::useTailwind();
 
+        // 5 محاولات دخول في الدقيقة لكل (إيميل + IP)
         RateLimiter::for('login', function ($request) {
             return Limit::perMinute(5)->by(
-                strtolower($request->input('email')) . '|' . $request->ip()
+                strtolower((string) $request->input('email')) . '|' . $request->ip()
             );
         });
     }

@@ -1,12 +1,13 @@
 <?php
-// app/Services/CategoryService.php
-namespace App\Services;
+
+namespace App\Services\Admin;
 
 use App\Exceptions\CategoryHasCoursesException;
 use App\Models\Category;
 use Illuminate\Support\Str;
 
-class CategoryService
+// الأدمن بيدير الأقسام (التصنيفات)
+class AdminCategoryService
 {
     public function paginate(int $perPage = 10)
     {
@@ -30,6 +31,7 @@ class CategoryService
 
     public function delete(Category $category): void
     {
+        // مينفعش نحذف قسم فيه كورسات
         if ($category->courses()->exists()) {
             throw new CategoryHasCoursesException();
         }

@@ -1,20 +1,15 @@
 <?php
 
-use App\Http\Controllers\Admin\AdminController;
-use App\Http\Controllers\Admin\UserController;
-use App\Http\Controllers\CategoryController;
-use App\Http\Controllers\CoursesController;
-use App\Http\Controllers\Instructor\InstructorController;
-use App\Http\Controllers\LessonController;
-
-use App\Http\Controllers\SectionController;
-use App\Http\Controllers\student\AuthController;
-use App\Http\Controllers\student\ProfileController;
+use App\Http\Controllers\Admin;
+use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Instructor;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Student;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'welcome');
 
-/* ---------- Auth ---------- */
+/* ---------- تسجيل الدخول والتسجيل (للزوار بس) ---------- */
 Route::prefix('auth')->name('auth.')->middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'login'])->name('login');
     Route::post('/signin', [AuthController::class, 'signin'])->middleware('throttle:login')->name('signin');
@@ -25,54 +20,47 @@ Route::prefix('auth')->name('auth.')->middleware('guest')->group(function () {
 
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth')->name('logout');
 
-/* ---------- Student ---------- */
+/* ---------- البروفايل (مشترك لكل المستخدمين المسجلين) ---------- */
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
+    Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
+    Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('password.update.custom');
+});
+
+/* ---------- الطالب ---------- */
 Route::middleware(['auth', 'role:student'])->group(function () {
-    Route::get('/student/home', [ProfileController::class, 'index'])->name('student.home');
+    Route::get('/student/home', [Student\HomeController::class, 'index'])->name('student.home');
 
     Route::prefix('students')->group(function () {
-        Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
-        Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
-        Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('password.update.custom');
-
-        Route::get('/all-courses/{category?}', [ProfileController::class, 'allCourses'])->name('all-courses');
-        Route::get('/courses', [ProfileController::class, 'courses'])->name('courses');
-        Route::post('/courses/{course}/enroll', [ProfileController::class, 'store'])->name('courses.enroll');
-        Route::get('/courses/{course}', [CoursesController::class, 'show'])
+        Route::get('/all-courses/{category?}', [Student\CourseController::class, 'index'])->name('all-courses');
+        Route::get('/courses', [Student\CourseController::class, 'myCourses'])->name('courses');
+        Route::get('/courses/{course}', [Student\CourseController::class, 'show'])
             ->middleware('check_enrollment')
             ->name('course-details');
 
-
+        Route::post('/courses/{course}/enroll', [Student\EnrollmentController::class, 'store'])->name('courses.enroll');
     });
-
 });
 
-/* ---------- Instructor / Admin ---------- */
+/* ---------- المدرس (والأدمن كمان يقدر يدخل) ---------- */
 Route::middleware(['auth', 'role:instructor,admin'])->prefix('instructor')->name('instructor.')->group(function () {
-    Route::get('/dashboard', [InstructorController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard', [Instructor\DashboardController::class, 'index'])->name('dashboard');
 
-    Route::get('/courses/create', [CoursesController::class, 'create'])->name('courses.create');
-    Route::post('/courses/store', [CoursesController::class, 'store'])->name('courses.store');
-    Route::get('/courses/{course}/edit', [CoursesController::class, 'edit'])->name('courses.edit');
-    Route::put('/courses/{course}/update', [CoursesController::class, 'update'])->name('courses.update');
-    Route::delete('/courses/{course}/destroy', [CoursesController::class, 'destroy'])->name('courses.destroy');
+    Route::resource('courses', Instructor\CourseController::class)->except(['index', 'show']);
+    Route::resource('sections', Instructor\SectionController::class)->only(['create', 'store', 'destroy']);
+    Route::resource('lessons', Instructor\LessonController::class)->only(['store', 'destroy']);
 
+    // نفس صفحة البروفايل المشتركة (موجود عشان القايمة الجانبية)
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
-    Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
-    Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('password.update.custom');
-
-    Route::resource('sections', SectionController::class)->only(['create', 'store']);
-    Route::resource('lessons', LessonController::class)->only(['store']);
 });
 
-/* ---------- Admin ---------- */
+/* ---------- الأدمن ---------- */
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
-    Route::get('/dashboard', [AdminController::class, 'index'])->name('dashboard');
-    Route::resource('users', UserController::class);
-    Route::resource('categories', CategoryController::class)->except(['create', 'show']);
-    Route::get('/courses', [CoursesController::class, 'index'])->name('courses.index');
+    Route::get('/dashboard', [Admin\DashboardController::class, 'index'])->name('dashboard');
+
+    Route::resource('users', Admin\UserController::class)->except(['show']);
+    Route::resource('categories', Admin\CategoryController::class)->except(['create', 'show']);
+    Route::resource('courses', Admin\CourseController::class)->only(['index', 'destroy']);
 
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
-    Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
-    Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('password.update.custom');
-
 });

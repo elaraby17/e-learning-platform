@@ -2,22 +2,20 @@
 
 namespace App\Http\Middleware;
 
-use App\Models\Enrollment;
+use App\Services\Student\StudentEnrollmentService;
 use Closure;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Response;
 
+// بيمنع الطالب يفتح كورس هو مش مشترك فيه
 class CheckEnrollment
 {
-    public function handle($request, Closure $next)
+    public function __construct(private StudentEnrollmentService $enrollmentService) {}
+
+    public function handle(Request $request, Closure $next)
     {
-        $course = $request->route('course') ;
+        $course = $request->route('course');
 
-        $enrolled = Enrollment::where('student_id', auth()->id())
-            ->where('course_id', $course->id)
-            ->exists();
-
-        if (!$enrolled) {
+        if (! $this->enrollmentService->isEnrolled($request->user(), $course)) {
             return redirect()
                 ->route('all-courses')
                 ->with('error', 'يجب الاشتراك في الكورس أولاً');

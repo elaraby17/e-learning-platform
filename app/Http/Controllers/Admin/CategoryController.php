@@ -1,14 +1,15 @@
 <?php
-// app/Http/Controllers/CategoryController.php
-namespace App\Http\Controllers;
 
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
 use App\Models\Category;
-use App\Services\CategoryService;
+use App\Services\Admin\AdminCategoryService;
 use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
-    public function __construct(private CategoryService $categoryService) {}
+    public function __construct(private AdminCategoryService $categoryService) {}
 
     public function index()
     {
@@ -39,7 +40,7 @@ class CategoryController extends Controller
     public function update(Request $request, Category $category)
     {
         $data = $request->validate([
-            'name'        => 'required|string|max:255|unique:categories,name,'.$category->id,
+            'name'        => 'required|string|max:255|unique:categories,name,' . $category->id,
             'description' => 'nullable|string|max:1000',
         ]);
 
