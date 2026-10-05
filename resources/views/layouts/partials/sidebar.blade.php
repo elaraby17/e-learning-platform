@@ -33,7 +33,7 @@
 
 {{-- ══ Sidebar · desktop (fixed, collapsible) + mobile/tablet (off-canvas drawer) ══ --}}
 <aside id="app-sidebar-drawer"
-    class="app-sidebar fixed top-[4.5rem] inset-y-0 z-25 flex flex-col border-e border-separator bg-surface shadow-card transition-[width,transform] duration-200 ease-out dark:border-navy-border dark:shadow-none lg:translate-x-0"
+    class="app-sidebar fixed top-[4.5rem] inset-y-0 z-50 flex flex-col border-e border-separator bg-surface shadow-card transition-[width,transform] duration-200 ease-out dark:border-navy-border dark:shadow-none lg:translate-x-0"
     data-sidebar-drawer inert aria-label="القائمة الجانبية">
 
     {{-- Brand --}}
