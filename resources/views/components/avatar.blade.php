@@ -2,7 +2,7 @@
     'name' => '',
     'image' => null,
     'size' => 'h-14 w-14',
-    'rounded' => 'rounded-xl',
+    'rounded' => 'rounded-full',
 ])
 
 @php
@@ -16,10 +16,11 @@
     };
 @endphp
 
-<span {{ $attributes->class(['relative inline-flex shrink-0 bg-brand-500 font-extrabold text-white items-center justify-center overflow-hidden', $size, $rounded]) }}>
-    <span class="absolute inset-0 flex items-center justify-center" aria-hidden="true">{{ $initial }}</span>
+{{-- HeroUI Avatar: .avatar + fallback (الحرف الأول) + image فوقه --}}
+<span {{ $attributes->class(['avatar', $size, $rounded]) }}>
+    <span class="avatar__fallback avatar__fallback--accent bg-accent-soft font-bold" aria-hidden="true">{{ $initial }}</span>
     @if ($imageUrl)
-        <img src="{{ $imageUrl }}" alt="{{ $name }}" class="relative h-full w-full object-cover" loading="lazy"
+        <img src="{{ $imageUrl }}" alt="{{ $name }}" class="avatar__image object-cover" loading="lazy"
             data-img-fallback>
     @endif
 </span>

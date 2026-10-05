@@ -49,7 +49,7 @@
 
                                 <div class="min-w-0">
                                     <p class="truncate font-extrabold text-ink dark:text-white">{{ $user->name }}</p>
-                                    <p class="truncate text-xs text-slate-500 dark:text-slate-400" dir="ltr">
+                                    <p class="truncate text-xs text-muted" dir="ltr">
                                         {{ $user->email }}
                                     </p>
                                 </div>
@@ -114,8 +114,8 @@
                             :image="$user->image" />
                         <div class="min-w-0 flex-1">
                             <p class="truncate font-extrabold text-ink dark:text-white">{{ $user->name }}</p>
-                            <p class="truncate text-xs text-slate-500 dark:text-slate-400" dir="ltr">{{ $user->email }}</p>
-                            <p class="mt-1 truncate text-xs font-bold text-slate-500 dark:text-slate-400" dir="ltr">
+                            <p class="truncate text-xs text-muted" dir="ltr">{{ $user->email }}</p>
+                            <p class="mt-1 truncate text-xs font-bold text-muted" dir="ltr">
                                 {{ $user->phone }}
                             </p>
                         </div>

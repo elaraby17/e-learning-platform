@@ -14,7 +14,7 @@
 
         {{-- Dark mode toggle --}}
         <button @click="$store.theme.toggle()"
-            class="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 hover:bg-indigo-50 dark:hover:bg-slate-700 hover:text-indigo-600 dark:hover:text-indigo-400 transition flex items-center justify-center">
+            class="w-10 h-10 rounded-xl bg-default dark:bg-slate-800 text-muted hover:bg-indigo-50 dark:hover:bg-slate-700 hover:text-indigo-600 dark:hover:text-indigo-400 transition flex items-center justify-center">
             {{-- Sun (shown in dark) --}}
             <svg x-show="$store.theme.dark" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -29,7 +29,7 @@
 
         @guest
             <a href="{{ route('auth.login') }}"
-                class="text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition font-semibold text-sm">
+                class="text-muted hover:text-indigo-600 dark:hover:text-indigo-400 transition font-semibold text-sm">
                 تسجيل دخول
             </a>
             <a href="{{ route('auth.register') }}"
@@ -41,7 +41,7 @@
         @auth
             <div class="flex items-center gap-3">
                 <div class="text-right hidden sm:block">
-                    <p class="text-xs text-slate-400 dark:text-slate-500 font-semibold leading-none mb-0.5">مرحباً،</p>
+                    <p class="text-xs text-muted font-semibold leading-none mb-0.5">مرحباً،</p>
                     <p class="text-sm font-bold text-slate-700 dark:text-slate-200 leading-none">{{ auth()->user()->name }}
                     </p>
                 </div>

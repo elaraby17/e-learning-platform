@@ -45,17 +45,17 @@
             <a href="{{ $linkHref }}" @if ($isActive) aria-current="page" @endif
                 class="sidebar-link group relative flex min-h-11 items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-bold transition-all duration-200
                     {{ $isActive
-                        ? 'bg-accent-gradient text-white shadow-accent'
-                        : 'text-ink-muted hover:bg-canvas hover:text-ink dark:text-mist/80 dark:hover:bg-white/5 dark:hover:text-mist' }}">
+                        ? 'bg-accent-soft text-accent-soft-foreground'
+                        : 'text-muted hover:bg-default/60 hover:text-foreground' }}">
 
                 @if ($isActive)
-                    <span class="absolute inset-y-2 start-0 w-1 rounded-full bg-white/80" aria-hidden="true"></span>
+                    <span class="absolute inset-y-2 start-0 w-1 rounded-full bg-accent" aria-hidden="true"></span>
                 @endif
 
                 <span @class([
                     'icon-box transition-colors duration-200',
-                    'bg-white/20! text-white!' => $isActive,
-                    $tone => ! $isActive,
+                    'bg-accent text-accent-foreground' => $isActive,
+                    'bg-default text-default-foreground' => ! $isActive,
                 ])>
                     <i class="{{ $link['icon'] ?? 'fa-solid fa-circle-dot' }}" aria-hidden="true"></i>
                 </span>
@@ -65,8 +65,8 @@
                 @if (! empty($link['badge']))
                     <span @class([
                         'sidebar-label shrink-0 rounded-full px-2 py-0.5 text-[11px] font-extrabold',
-                        'bg-white/20 text-white' => $isActive,
-                        'bg-canvas text-ink-muted dark:bg-navy-elevated dark:text-mist/80' => ! $isActive,
+                        'bg-accent text-accent-foreground' => $isActive,
+                        'bg-default text-muted' => ! $isActive,
                     ])>{{ $link['badge'] }}</span>
                 @endif
 

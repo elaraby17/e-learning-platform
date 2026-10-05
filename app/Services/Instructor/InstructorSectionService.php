@@ -27,6 +27,13 @@ class InstructorSectionService
         return Section::create($data);
     }
 
+    public function update(Section $section, array $data): Section
+    {
+        $section->update($data);
+
+        return $section;
+    }
+
     // الدروس بتتحذف لوحدها (cascade في الداتابيز)
     public function delete(Section $section): void
     {

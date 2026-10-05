@@ -11,41 +11,41 @@
 ])
 
 @php
-    /* كل كارت بلون مختلف من الـ palette: مربع أيقونة بتدرّج + شريط/خط بنفس النبرة */
+    /* HeroUI: مربع أيقونة soft + شريط solid بنفس النبرة (accent / success / warning / danger) */
     $tones = [
         'brand' => [
-            'box' => 'bg-gradient-to-br from-brand-500 to-violet-500 shadow-brand',
-            'bar' => 'bg-gradient-to-l from-brand-500 to-violet-500',
+            'box' => 'bg-accent-soft text-accent-soft-foreground',
+            'bar' => 'bg-accent',
             'text' => 'text-brand-600 dark:text-brand-300',
         ],
         'violet' => [
-            'box' => 'bg-gradient-to-br from-violet-500 to-brand-400 shadow-glow-violet',
-            'bar' => 'bg-gradient-to-l from-violet-500 to-brand-400',
+            'box' => 'bg-accent-soft text-accent-soft-foreground',
+            'bar' => 'bg-accent',
             'text' => 'text-violet-600 dark:text-violet-300',
         ],
         'coral' => [
-            'box' => 'bg-gradient-to-br from-coral-500 to-coral-400 shadow-glow-warm',
-            'bar' => 'bg-gradient-to-l from-coral-500 to-amber-500',
+            'box' => 'bg-warning-soft text-warning-soft-foreground',
+            'bar' => 'bg-warning',
             'text' => 'text-coral-600 dark:text-coral-300',
         ],
         'sun' => [
-            'box' => 'bg-gradient-to-br from-amber-500 to-coral-400 shadow-glow-warm',
-            'bar' => 'bg-gradient-to-l from-amber-500 to-coral-400',
+            'box' => 'bg-warning-soft text-warning-soft-foreground',
+            'bar' => 'bg-warning',
             'text' => 'text-amber-600 dark:text-amber-300',
         ],
         'emerald' => [
-            'box' => 'bg-gradient-to-br from-emerald-500 to-sky-400 shadow-glow-sky',
-            'bar' => 'bg-gradient-to-l from-emerald-500 to-sky-400',
+            'box' => 'bg-success-soft text-success-soft-foreground',
+            'bar' => 'bg-success',
             'text' => 'text-emerald-600 dark:text-emerald-300',
         ],
         'sky' => [
-            'box' => 'bg-gradient-to-br from-sky-400 to-brand-500 shadow-glow-sky',
-            'bar' => 'bg-gradient-to-l from-sky-400 to-brand-500',
+            'box' => 'bg-accent-soft text-accent-soft-foreground',
+            'bar' => 'bg-accent',
             'text' => 'text-sky-600 dark:text-sky-300',
         ],
         'rose' => [
-            'box' => 'bg-gradient-to-br from-rose-500 to-coral-500 shadow-glow-warm',
-            'bar' => 'bg-gradient-to-l from-rose-500 to-coral-500',
+            'box' => 'bg-danger-soft text-danger-soft-foreground',
+            'bar' => 'bg-danger',
             'text' => 'text-rose-600 dark:text-rose-300',
         ],
     ];
@@ -74,7 +74,7 @@
 <div {{ $attributes->class(['surface-card group relative overflow-hidden p-5 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-brand']) }}>
     <div class="flex items-start gap-4">
         @if ($icon)
-            <span class="icon-box-lg text-white {{ $palette['box'] }}">
+            <span class="icon-box-lg {{ $palette['box'] }}">
                 <i class="{{ $icon }}" aria-hidden="true"></i>
             </span>
         @endif
@@ -118,7 +118,7 @@
     </div>
 
     @if (! is_null($progress))
-        <div class="mt-4 h-2 w-full overflow-hidden rounded-full bg-canvas dark:bg-navy/70" role="progressbar"
+        <div class="mt-4 h-2 w-full overflow-hidden rounded-full bg-default" role="progressbar"
             aria-valuenow="{{ (int) $progress }}" aria-valuemin="0" aria-valuemax="100" aria-label="{{ $title }}">
             <div class="h-full rounded-full {{ $palette['bar'] }} transition-[width] duration-500"
                 style="width: {{ max(0, min(100, (int) $progress)) }}%"></div>

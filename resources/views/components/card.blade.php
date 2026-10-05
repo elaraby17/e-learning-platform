@@ -5,19 +5,20 @@
     'padded' => true,
 ])
 
+{{-- HeroUI Card: surface + shadow-surface + radius-3xl (الكلاس .surface-card في app.css) --}}
 <section {{ $attributes->class(['surface-card overflow-hidden']) }}>
     @if ($title || isset($actions))
-        <header class="flex flex-col gap-3 border-b border-slate-200 px-5 py-4 sm:flex-row sm:items-center sm:justify-between dark:border-navy-border">
+        <header class="flex flex-col gap-3 border-b border-separator px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
             <div class="flex items-start gap-3">
                 @if ($icon)
-                    <span class="icon-box bg-accent-gradient text-white shadow-accent">
+                    <span class="icon-box">
                         <i class="{{ $icon }}" aria-hidden="true"></i>
                     </span>
                 @endif
                 <div>
-                    <h2 class="text-lg font-extrabold text-ink dark:text-mist">{{ $title }}</h2>
+                    <h2 class="text-base font-bold text-foreground">{{ $title }}</h2>
                     @if ($description)
-                        <p class="mt-0.5 text-sm text-ink-muted">{{ $description }}</p>
+                        <p class="mt-0.5 text-sm text-muted">{{ $description }}</p>
                     @endif
                 </div>
             </div>
@@ -33,7 +34,7 @@
     </div>
 
     @isset($footer)
-        <footer class="border-t border-slate-200 bg-canvas px-5 py-3 dark:border-navy-border dark:bg-navy/40">
+        <footer class="border-t border-separator bg-surface-secondary px-5 py-3">
             {{ $footer }}
         </footer>
     @endisset

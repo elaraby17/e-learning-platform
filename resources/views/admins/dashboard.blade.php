@@ -158,7 +158,7 @@
                             @if ($student)
                                 <x-avatar :name="$name" size="h-10 w-10" :image="$student->image" />
                             @else
-                                <span class="grid size-10 shrink-0 place-items-center rounded-full bg-slate-100 text-slate-400 dark:bg-white/5">
+                                <span class="grid size-10 shrink-0 place-items-center rounded-full bg-default text-slate-400 dark:bg-white/5">
                                     <i class="fa-solid fa-user-slash text-xs"></i>
                                 </span>
                             @endif
@@ -224,7 +224,7 @@
             ] as $shortcut)
                 @if (Route::has($shortcut['route']))
                     <a href="{{ route($shortcut['route']) }}"
-                        class="group flex flex-col items-center gap-2 rounded-2xl border border-slate-200 bg-canvas p-4 text-center transition hover:-translate-y-0.5 hover:border-accent hover:bg-white hover:shadow-accent dark:border-navy-border dark:bg-navy/40 dark:hover:border-accent dark:hover:bg-navy-elevated">
+                        class="group flex flex-col items-center gap-2 rounded-2xl border border-separator bg-canvas p-4 text-center transition hover:-translate-y-0.5 hover:border-accent hover:bg-white hover:shadow-accent dark:border-navy-border dark:bg-navy/40 dark:hover:border-accent dark:hover:bg-navy-elevated">
                         <span class="bg-accent-gradient flex size-11 items-center justify-center rounded-xl text-white shadow-accent transition group-hover:scale-110">
                             <i class="{{ $shortcut['icon'] }}" aria-hidden="true"></i>
                         </span>

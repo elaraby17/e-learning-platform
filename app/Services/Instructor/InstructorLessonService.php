@@ -8,11 +8,7 @@ class InstructorLessonService
 {
     public function create(array $data): Lesson
     {
-        // لو الرابط يوتيوب حوله لرابط embed وهات الصورة المصغرة
-        if (! empty($data['video_url']) && $videoId = $this->youtubeId($data['video_url'])) {
-            $data['video_url'] = "https://www.youtube.com/embed/{$videoId}";
-            $data['video_thumbnail'] ??= "https://img.youtube.com/vi/{$videoId}/hqdefault.jpg";
-        }
+        $data = $this->prepare($data);
 
         // لو الترتيب مش متحدد، حطه آخر درس في السيكشن
         if (empty($data['order_number'])) {
@@ -22,9 +18,27 @@ class InstructorLessonService
         return Lesson::create($data);
     }
 
+    public function update(Lesson $lesson, array $data): Lesson
+    {
+        $lesson->update($this->prepare($data));
+
+        return $lesson;
+    }
+
     public function delete(Lesson $lesson): void
     {
         $lesson->delete();
+    }
+
+    // لو الرابط يوتيوب حوله لرابط embed وهات الصورة المصغرة
+    private function prepare(array $data): array
+    {
+        if (! empty($data['video_url']) && $videoId = $this->youtubeId($data['video_url'])) {
+            $data['video_url'] = "https://www.youtube.com/embed/{$videoId}";
+            $data['video_thumbnail'] ??= "https://img.youtube.com/vi/{$videoId}/hqdefault.jpg";
+        }
+
+        return $data;
     }
 
     private function youtubeId(string $url): ?string

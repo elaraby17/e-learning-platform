@@ -67,7 +67,7 @@
                             alt="{{ $course->title }}" loading="lazy" data-img-fallback
                             class="mb-3 h-24 w-full max-w-sm rounded-xl object-cover">
                     @else
-                        <i class="fa-solid fa-cloud-arrow-up mb-3 text-3xl text-slate-400 dark:text-slate-500"
+                        <i class="fa-solid fa-cloud-arrow-up mb-3 text-3xl text-muted"
                             aria-hidden="true"></i>
                     @endif
 
@@ -76,14 +76,14 @@
                         <input id="image" name="image" type="file" accept="image/*" class="sr-only">
                     </label>
 
-                    <p class="mt-1 text-xs font-bold text-slate-400 dark:text-slate-500">
+                    <p class="mt-1 text-xs font-bold text-muted">
                         PNG, JPG, WebP — حتى 2 ميجابايت
                     </p>
                 </div>
             </x-file-field>
 
             <div
-                class="flex flex-wrap items-center justify-end gap-3 border-t border-slate-200 pt-4 dark:border-navy-border">
+                class="flex flex-wrap items-center justify-end gap-3 border-t border-separator pt-4 dark:border-navy-border">
                 <x-button variant="secondary" type="button" icon="fa-solid fa-xmark"
                     onclick="history.back()">إلغاء</x-button>
                 <x-button type="submit" icon="fa-solid fa-floppy-disk">حفظ الكورس</x-button>

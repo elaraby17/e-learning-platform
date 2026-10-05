@@ -31,7 +31,7 @@
     class="group surface-card relative flex flex-col overflow-hidden transition-all duration-200 hover:-translate-y-0.5 hover:shadow-brand dark:hover:border-brand-500/40">
 
     {{-- ══ الغلاف 16:9 ══ --}}
-    <div class="relative aspect-video overflow-hidden bg-gradient-to-br from-brand-500 to-violet-500">
+    <div class="relative aspect-video overflow-hidden bg-accent">
         @if ($cover)
             <img src="{{ $cover }}" alt="{{ $title }}" loading="lazy" data-img-fallback
                 class="size-full object-cover transition duration-500 group-hover:scale-105">
@@ -46,7 +46,7 @@
 
         {{-- بادج التصنيف --}}
         <span
-            class="absolute top-3 start-3 rounded-full bg-white/95 px-3 py-1.5 text-xs font-extrabold text-brand-700 shadow-card dark:bg-navy/90 dark:text-brand-200">
+            class="absolute top-3 start-3 rounded-full bg-overlay/95 px-3 py-1.5 text-xs font-bold text-accent-soft-foreground shadow-overlay backdrop-blur">
             {{ $categoryName }}
         </span>
 
@@ -63,7 +63,7 @@
         @if ($isEnrolled && ! is_null($progressValue))
             <div class="absolute inset-x-0 bottom-0 h-1.5 bg-ink/40" role="progressbar"
                 aria-valuenow="{{ $progressValue }}" aria-valuemin="0" aria-valuemax="100" aria-label="نسبة إكمال الكورس">
-                <div class="h-full rounded-full bg-gradient-to-l from-emerald-500 to-sky-400"
+                <div class="h-full rounded-full bg-success"
                     style="width: {{ $progressValue }}%"></div>
             </div>
         @endif
@@ -138,7 +138,7 @@
                 </x-button>
             </div>
         @else
-            <div class="mt-auto flex items-center justify-between gap-2 border-t border-dashed border-slate-200 pt-4 dark:border-navy-border">
+            <div class="mt-auto flex items-center justify-between gap-2 border-t border-dashed border-separator pt-4 dark:border-navy-border">
                 <div class="flex flex-col leading-tight">
                     <span class="text-[11px] font-extrabold tracking-wider text-ink-soft uppercase">السعر</span>
                     <span class="text-lg font-extrabold text-ink dark:text-mist">

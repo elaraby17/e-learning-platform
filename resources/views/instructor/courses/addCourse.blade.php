@@ -52,7 +52,7 @@
                 hint="PNG, JPG, WebP — حتى 2 ميجابايت">
                 <div
                     class="flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-slate-300 bg-canvas px-6 py-8 text-center transition hover:border-brand-400 hover:bg-brand-50/40 dark:border-navy-border dark:bg-navy/30 dark:hover:border-brand-500/50">
-                    <i class="fa-solid fa-cloud-arrow-up mb-3 text-3xl text-slate-400 dark:text-slate-500"
+                    <i class="fa-solid fa-cloud-arrow-up mb-3 text-3xl text-muted"
                         aria-hidden="true"></i>
 
                     <label for="image" class="cursor-pointer text-sm font-extrabold text-brand-600 dark:text-brand-400">
@@ -60,14 +60,14 @@
                         <input id="image" name="image" type="file" accept="image/*" class="sr-only">
                     </label>
 
-                    <p class="mt-1 text-xs font-bold text-slate-400 dark:text-slate-500">
+                    <p class="mt-1 text-xs font-bold text-muted">
                         PNG, JPG, WebP — حتى 2 ميجابايت
                     </p>
                 </div>
             </x-file-field>
 
             <div
-                class="flex flex-wrap items-center justify-end gap-3 border-t border-slate-200 pt-4 dark:border-navy-border">
+                class="flex flex-wrap items-center justify-end gap-3 border-t border-separator pt-4 dark:border-navy-border">
                 <x-button variant="secondary" type="button" icon="fa-solid fa-xmark"
                     onclick="history.back()">إلغاء</x-button>
                 <x-button type="submit" icon="fa-solid fa-floppy-disk">حفظ الكورس</x-button>

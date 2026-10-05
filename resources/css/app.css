@@ -1,6 +1,13 @@
 @import 'tailwindcss';
 
 /* ═══════════════════════════════════════════════════════════
+   HeroUI v3 · standalone styles (CSS only — بدون React)
+   لازم تتستورد بعد tailwindcss. بتجيب: tokens الألوان + الـ radius
+   + الـ shadows + كلاسات المكونات (.button .card .chip .progress-bar …)
+   ═══════════════════════════════════════════════════════════ */
+@import '@heroui/styles';
+
+/* ═══════════════════════════════════════════════════════════
    Fonts · Font Awesome (bundled locally through npm + Vite)
    ═══════════════════════════════════════════════════════════ */
 @import '@fontsource/almarai/arabic-300.css';
@@ -14,7 +21,7 @@
 @import '@fortawesome/fontawesome-free/css/all.min.css';
 
 /* ═══════════════════════════════════════════════════════════
-   Tailwind v4 · class-based dark mode
+   Tailwind v4 · class-based dark mode (نفس طريقة HeroUI: class="dark")
    ═══════════════════════════════════════════════════════════ */
 @custom-variant dark (&:where(.dark, .dark *));
 
@@ -25,21 +32,24 @@
 
 /* ═══════════════════════════════════════════════════════════
    Design tokens
+   الألوان الأساسية (accent / surface / foreground / border …) جاية من HeroUI.
+   هنا بس بنربط أسماء الألوان القديمة (brand / ink / navy / canvas) بنفس
+   قيم HeroUI، عشان كل الـ views الحالية تتغير من غير ما نلمسها.
    ═══════════════════════════════════════════════════════════ */
 @theme {
     --font-sans: 'Almarai', ui-sans-serif, system-ui, sans-serif;
 
-    /* Brand — derived from #4F7CFF */
-    --color-brand-50: #eef3ff;
-    --color-brand-100: #dce5ff;
-    --color-brand-200: #b9ccff;
-    --color-brand-300: #8faaff;
-    --color-brand-400: #6b8fff;
-    --color-brand-500: #4f7cff;
-    --color-brand-600: #3a5fe0;
-    --color-brand-700: #2e4cb8;
-    --color-brand-800: #263f91;
-    --color-brand-900: #1f3372;
+    /* Brand — مشتق تلقائياً من --accent بتاع HeroUI (يتغير لو غيّرت الـ accent) */
+    --color-brand-50: color-mix(in oklab, var(--accent) 8%, white);
+    --color-brand-100: color-mix(in oklab, var(--accent) 16%, white);
+    --color-brand-200: color-mix(in oklab, var(--accent) 32%, white);
+    --color-brand-300: color-mix(in oklab, var(--accent) 52%, white);
+    --color-brand-400: color-mix(in oklab, var(--accent) 76%, white);
+    --color-brand-500: var(--accent);
+    --color-brand-600: color-mix(in oklab, var(--accent) 88%, black);
+    --color-brand-700: color-mix(in oklab, var(--accent) 74%, black);
+    --color-brand-800: color-mix(in oklab, var(--accent) 60%, black);
+    --color-brand-900: color-mix(in oklab, var(--accent) 46%, black);
 
     /* ── Violet · تدرج الـ brand + لون الأدمن ── */
     --color-violet-50: #f1efff;
@@ -150,45 +160,38 @@
     --color-info-600: var(--color-sky-600);
     --color-info-700: var(--color-sky-700);
 
-    /* ── Dark surfaces ── */
-    --color-navy: #0b1624;
-    --color-navy-surface: #112033;
-    --color-navy-elevated: #17304a;
-    --color-navy-border: #1f3650;
+    /* ── Dark surfaces · قيم HeroUI الأصلية للـ dark theme ── */
+    --color-navy: oklch(12% 0.005 285.823);
+    --color-navy-surface: oklch(0.2103 0.0059 285.89);
+    --color-navy-elevated: oklch(0.257 0.0037 286.14);
+    --color-navy-border: oklch(28% 0.006 286.033);
 
-    /* ── Light surfaces ── */
-    --color-canvas: #f5f7ff;
-    --color-surface: #ffffff;
+    /* ── Light surfaces (surface نفسه جاي من HeroUI) ── */
+    --color-canvas: var(--background);
 
     /* ── Content ── */
-    --color-ink: #0f172a;
-    --color-ink-muted: #64748b;
-    --color-ink-soft: #94a3b8;
-    --color-mist: #e6edf7;
+    --color-ink: var(--foreground);
+    --color-ink-muted: var(--muted);
+    --color-ink-soft: color-mix(in oklab, var(--muted) 65%, transparent);
+    --color-mist: oklch(0.9911 0 0);
 
-    /* ── Signature gradients ── */
-    --gradient-brand: linear-gradient(135deg, #4f7cff 0%, #7c5cff 100%);
-    --gradient-warm: linear-gradient(135deg, #ff8a5c 0%, #ff5c8a 100%);
-    --gradient-fresh: linear-gradient(135deg, #12b981 0%, #38bdf8 100%);
-    --gradient-sun: linear-gradient(135deg, #ffb020 0%, #ff8a5c 100%);
-    --gradient-violet: linear-gradient(135deg, #7c5cff 0%, #4f7cff 100%);
-    --gradient-ink: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+    /* ── Gradients: HeroUI تصميمه flat، فخليناها تدرّج خفيف جداً من نفس اللون ── */
+    --gradient-brand: linear-gradient(135deg, var(--accent), var(--accent-hover));
+    --gradient-violet: linear-gradient(135deg, var(--accent), var(--accent-hover));
+    --gradient-ink: linear-gradient(135deg, var(--foreground), var(--foreground));
+    --gradient-warm: linear-gradient(135deg, var(--danger), var(--danger-hover));
+    --gradient-sun: linear-gradient(135deg, var(--warning), var(--warning-hover));
+    --gradient-fresh: linear-gradient(135deg, var(--success), var(--success-hover));
 
-    --radius-xs: 0.375rem;
-    --radius-sm: 0.5rem;
-    --radius-md: 0.75rem;
-    --radius-lg: 1rem;
-    --radius-xl: 1.25rem;
-    --radius-2xl: 1.5rem;
-
-    --shadow-soft: 0 1px 2px rgb(15 23 42 / 0.04), 0 8px 24px -12px rgb(15 23 42 / 0.12);
-    --shadow-card: 0 1px 2px rgb(15 23 42 / 0.05), 0 12px 32px -16px rgb(15 23 42 / 0.18);
-    --shadow-card-lg: 0 2px 6px rgb(15 23 42 / 0.04), 0 28px 60px -24px rgb(15 23 42 / 0.22);
-    --shadow-brand: 0 10px 30px -10px rgb(79 124 255 / 0.35);
-    --shadow-glow-brand: 0 0 0 1px rgb(79 124 255 / 0.25), 0 12px 40px -18px rgb(79 124 255 / 0.45);
-    --shadow-glow-violet: 0 0 0 1px rgb(124 92 255 / 0.28), 0 12px 40px -18px rgb(124 92 255 / 0.45);
-    --shadow-glow-warm: 0 0 0 1px rgb(255 107 107 / 0.28), 0 12px 40px -18px rgb(255 107 107 / 0.45);
-    --shadow-glow-sky: 0 0 0 1px rgb(56 189 248 / 0.28), 0 12px 40px -18px rgb(56 189 248 / 0.45);
+    /* ── Shadows · نفس ظلال HeroUI (في الـ dark mode بتبقى بدون ظل) ── */
+    --shadow-soft: var(--surface-shadow);
+    --shadow-card: var(--surface-shadow);
+    --shadow-card-lg: var(--overlay-shadow);
+    --shadow-brand: var(--surface-shadow);
+    --shadow-glow-brand: var(--surface-shadow);
+    --shadow-glow-violet: var(--surface-shadow);
+    --shadow-glow-warm: var(--surface-shadow);
+    --shadow-glow-sky: var(--surface-shadow);
 
     --animate-float: float 4s ease-in-out infinite;
     --animate-pulse-ring: pulse-ring 2.4s ease-out infinite;
@@ -221,31 +224,13 @@
 
 /* ═══════════════════════════════════════════════════════════
    Role accent · <html data-role="admin|student|instructor">
-   يغيّر لون التمييز (primary / active / progress / focus)
+   HeroUI بيستخدم accent واحد → كل الأدوار بتاخد نفس اللون.
+   لو عايز لون لكل دور تاني، override لـ --accent (HeroUI بيشتق الباقي):
+     html[data-role='admin'] { --accent: oklch(0.58 0.2 290); }
    ═══════════════════════════════════════════════════════════ */
 :root {
-    --accent-from: #4f7cff;
-    --accent-to: #38bdf8;
-}
-
-html[data-role='admin'] {
-    --accent-from: #7c5cff;
-    --accent-to: #4f7cff;
-}
-
-html[data-role='instructor'] {
-    --accent-from: #ff6b6b;
-    --accent-to: #ffb020;
-}
-
-html[data-role='student'] {
-    --accent-from: #4f7cff;
-    --accent-to: #38bdf8;
-}
-
-html[data-role='guest'] {
-    --accent-from: #4f7cff;
-    --accent-to: #7c5cff;
+    --accent-from: var(--accent);
+    --accent-to: var(--accent-hover);
 }
 
 /* ═══════════════════════════════════════════════════════════
@@ -258,14 +243,9 @@ html[data-role='guest'] {
     }
 
     body {
-        @apply bg-canvas font-sans text-[15px] antialiased dark:bg-navy;
+        @apply bg-background font-sans text-[15px] text-foreground antialiased;
         overflow-x: hidden;
-        color: var(--color-ink);
         line-height: 1.7;
-    }
-
-    .dark body {
-        color: var(--color-mist);
     }
 
     /* Never allow a horizontal scrollbar on the page itself */
@@ -273,20 +253,13 @@ html[data-role='guest'] {
         overflow-x: clip;
     }
 
+    /* خط Almarai مفيهوش وزن 500/600، فبنستخدم 700 للعناوين */
     h1,
     h2,
     h3,
     h4 {
-        @apply font-extrabold text-ink;
-        color: var(--color-ink);
+        @apply font-bold text-foreground;
         line-height: 1.35;
-    }
-
-    .dark h1,
-    .dark h2,
-    .dark h3,
-    .dark h4 {
-        color: var(--color-mist);
     }
 
     a,
@@ -295,16 +268,8 @@ html[data-role='guest'] {
     select,
     textarea {
         @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2;
-        --tw-ring-color: var(--accent-from);
-        --tw-ring-offset-color: var(--color-canvas);
-    }
-
-    .dark a,
-    .dark button,
-    .dark input,
-    .dark select,
-    .dark textarea {
-        --tw-ring-offset-color: var(--color-navy);
+        --tw-ring-color: var(--focus);
+        --tw-ring-offset-color: var(--background);
     }
 
     img,
@@ -315,13 +280,13 @@ html[data-role='guest'] {
     }
 
     ::selection {
-        @apply bg-brand-500/25;
+        background: color-mix(in oklab, var(--accent) 25%, transparent);
     }
 
-    /* Darker, brand-tinted scrollbars */
+    /* Neutral thin scrollbars (HeroUI) */
     * {
         scrollbar-width: thin;
-        scrollbar-color: var(--color-brand-400) transparent;
+        scrollbar-color: var(--scrollbar-thumb) transparent;
     }
 
     *::-webkit-scrollbar {
@@ -330,7 +295,8 @@ html[data-role='guest'] {
     }
 
     *::-webkit-scrollbar-thumb {
-        @apply rounded-full bg-brand-400/60;
+        border-radius: 9999px;
+        background: var(--scrollbar-thumb);
     }
 
     *::-webkit-scrollbar-track {
@@ -364,17 +330,20 @@ html[data-role='guest'] {
     width: 16rem;
 }
 
-/* Sidebar dark surface — spec #0F1E2E (different from card surfaces) */
+/* Sidebar dark surface — HeroUI surface token */
 .dark .app-sidebar {
-    background-color: #0f1e2e;
+    background-color: var(--surface);
 }
 
 .app-shell {
     margin-inline-start: 0;
 }
+.app-shell {
+    margin-inline-start: 0;
+}
 
 @media (min-width: 64rem) {
-    .app-shell {
+    .app-sidebar ~ .app-shell {
         margin-inline-start: 16rem;
         transition: margin-inline-start 240ms ease;
     }
@@ -383,11 +352,10 @@ html[data-role='guest'] {
         width: 5rem;
     }
 
-    html[data-sidebar='collapsed'] .app-shell {
+    html[data-sidebar='collapsed'] .app-sidebar ~ .app-shell {
         margin-inline-start: 5rem;
     }
 }
-
 @media (min-width: 64rem) {
 
     /* Collapsed (icons only) mode: hide texts, reveal tooltips on hover */
@@ -444,166 +412,157 @@ html[data-role='guest'] {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   Role-accent utilities (تتبدّل مع data-role)
+   Accent utilities
+   (bg-accent / text-accent / border-accent / ring-accent بقت جاهزة من HeroUI)
    ═══════════════════════════════════════════════════════════ */
 @utility bg-accent-gradient {
-    background-image: linear-gradient(135deg, var(--accent-from) 0%, var(--accent-to) 100%);
-}
-
-@utility bg-accent {
-    background-color: var(--accent-from);
-}
-
-@utility text-accent {
-    color: var(--accent-from);
-}
-
-@utility border-accent {
-    border-color: var(--accent-from);
+    background-color: var(--accent);
+    color: var(--accent-foreground);
 }
 
 @utility shadow-accent {
-    box-shadow: 0 10px 30px -12px color-mix(in oklab, var(--accent-from) 55%, transparent);
-}
-
-@utility ring-accent {
-    --tw-ring-color: var(--accent-from);
+    box-shadow: var(--field-shadow);
 }
 
 /* ═══════════════════════════════════════════════════════════
-   Components utilities
+   Components utilities · بتستخدم tokens بتاعة HeroUI
    ═══════════════════════════════════════════════════════════ */
 @layer components {
+    /* Card · زي .card--default بتاعة HeroUI */
     .surface-card {
-        @apply rounded-2xl border border-slate-200/70 bg-surface shadow-card dark:border-navy-border dark:bg-navy-surface;
+        @apply rounded-3xl bg-surface text-foreground shadow-surface dark:border dark:border-border;
     }
 
     .surface-elevated {
-        @apply rounded-2xl border border-navy-border bg-navy-elevated;
+        @apply rounded-2xl bg-surface-tertiary text-foreground;
     }
 
     .surface-muted {
-        @apply rounded-2xl border border-slate-200/70 bg-canvas dark:border-navy-border dark:bg-navy/60;
+        @apply rounded-2xl bg-surface-secondary text-foreground;
     }
 
-    /* الأيقونات دائماً داخل مربع ملوّن (بدون أيقونات عارية) */
+    /* الأيقونات دائماً داخل مربع soft (accent-soft) */
     .icon-box {
-        @apply flex size-10 shrink-0 items-center justify-center rounded-xl text-base;
+        @apply flex size-10 shrink-0 items-center justify-center rounded-2xl bg-accent-soft text-base text-accent-soft-foreground;
     }
 
     .icon-box-lg {
-        @apply flex size-12 shrink-0 items-center justify-center rounded-2xl text-lg;
+        @apply flex size-12 shrink-0 items-center justify-center rounded-3xl bg-accent-soft text-lg text-accent-soft-foreground;
     }
 
     /* Horizontal-scroll hint wrapper for tables */
     .scroll-x-hint {
         @apply relative overflow-x-auto;
-        background-image: linear-gradient(to left, rgb(15 23 42 / 0.06), transparent 40%);
+        background-image: linear-gradient(to left, color-mix(in oklab, var(--foreground) 8%, transparent), transparent 40%);
         background-repeat: no-repeat;
         background-attachment: local;
     }
 
     .sidebar-tooltip {
-        @apply pointer-events-none invisible absolute start-full top-1/2 z-50 ms-3 -translate-y-1/2 whitespace-nowrap rounded-lg bg-ink px-2.5 py-1.5 text-xs font-bold text-white opacity-0 shadow-lg transition-opacity duration-150 dark:bg-navy-elevated;
+        @apply pointer-events-none invisible absolute start-full top-1/2 z-50 ms-3 -translate-y-1/2 whitespace-nowrap rounded-xl bg-foreground px-2.5 py-1.5 text-xs font-bold text-background opacity-0 shadow-overlay transition-opacity duration-150;
     }
 
+    /* Label · زي .label بتاعة HeroUI */
     .form-label {
-        @apply mb-2 flex items-center gap-1 text-sm font-bold;
-        color: var(--color-ink-muted);
+        @apply mb-1.5 flex items-center gap-1 text-sm font-bold text-foreground;
     }
 
-    .dark .form-label {
-        color: color-mix(in oklab, var(--color-mist) 82%, transparent);
-    }
-
+    /* Field · زي .input--secondary بتاعة HeroUI (bg-default جوه الكروت) */
     .form-control {
-        @apply block min-h-12 w-full rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-[15px] transition
-        placeholder:text-slate-400
-        focus:border-accent focus:bg-surface
-        dark:border-navy-border dark:bg-navy/70 dark:placeholder:text-slate-500
-        dark:focus:bg-navy-surface;
-        color: var(--color-ink);
-        box-shadow: 0 1px 2px rgb(15 23 42 / 0.04);
+        @apply block min-h-11 w-full rounded-field border bg-default px-3.5 py-2.5 text-[15px] text-field-foreground outline-none placeholder:text-field-placeholder;
+        border-color: transparent;
+        transition:
+            background-color 150ms var(--ease-smooth),
+            border-color 150ms var(--ease-smooth),
+            box-shadow 150ms var(--ease-out);
     }
 
-    .dark .form-control {
-        color: var(--color-mist);
-        box-shadow: none;
+    @media (hover: hover) {
+        .form-control:hover:not(:focus):not(:disabled) {
+            background-color: var(--default-hover);
+        }
     }
 
     .form-control:focus {
-        border-color: var(--accent-from);
-        box-shadow: 0 0 0 4px color-mix(in oklab, var(--accent-from) 18%, transparent);
+        @apply status-focused-field;
+        background-color: var(--default);
+        border-color: var(--field-border-focus, var(--accent));
     }
 
-    .form-control-error {
-        @apply border-rose-500 focus:border-rose-500 dark:border-rose-500;
+    .form-control:disabled {
+        @apply status-disabled;
+    }
+
+    .form-control-error,
+    .form-control-error:focus {
+        @apply status-invalid-field;
+        border-color: var(--danger);
+    }
+
+    /* Native <select> · سهم HeroUI-style بدل الافتراضي */
+    select.form-control {
+        appearance: none;
+        padding-inline-end: 2.5rem;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2371717a' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 0.85rem center;
+        background-size: 1rem;
+    }
+
+    [dir='rtl'] select.form-control {
+        background-position: left 0.85rem center;
     }
 
     .form-hint {
-        @apply mt-1.5 text-xs font-medium;
-        color: var(--color-ink-muted);
+        @apply mt-1.5 text-xs text-muted;
     }
 
     .form-error {
-        @apply mt-1.5 flex items-start gap-1.5 text-xs font-bold text-rose-600 dark:text-rose-400;
+        @apply mt-1.5 flex items-start gap-1.5 text-xs font-bold text-danger;
     }
 
     /* File upload dropzone */
     .dropzone {
-        @apply flex flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-slate-300 bg-canvas px-6 py-8 text-center transition
-        dark:border-navy-border dark:bg-navy/40;
+        @apply flex flex-col items-center justify-center gap-2 rounded-3xl border-2 border-dashed border-separator bg-surface-secondary/50 px-6 py-8 text-center transition-colors;
     }
 
     .dropzone:hover {
-        border-color: var(--accent-from);
+        border-color: var(--accent);
     }
 
     /* شريط أزرار الحفظ · sticky أسفل الشاشة على الموبايل */
     .form-actions {
-        @apply sticky bottom-0 z-20 -mx-4 mt-6 flex flex-wrap items-center justify-end gap-3 border-t border-slate-200 bg-surface/95 px-4 py-4 backdrop-blur-lg
-        sm:static sm:mx-0 sm:border-0 sm:bg-transparent sm:px-0 sm:backdrop-blur-none
-        dark:border-navy-border dark:bg-navy-surface/95;
+        @apply sticky bottom-0 z-20 -mx-4 mt-6 flex flex-wrap items-center justify-end gap-3 border-t border-separator bg-surface/95 px-4 py-4 backdrop-blur-lg
+        sm:static sm:mx-0 sm:border-0 sm:bg-transparent sm:px-0 sm:backdrop-blur-none;
     }
 
     .table-head-cell {
-        @apply px-4 py-3 text-start text-xs font-extrabold tracking-wide whitespace-nowrap uppercase;
-        color: var(--color-ink-muted);
+        @apply px-4 py-3 text-start text-xs font-bold whitespace-nowrap text-muted;
     }
 
     .table-body-cell {
-        @apply px-4 py-3 text-sm align-middle;
-        color: var(--color-ink);
-    }
-
-    .dark .table-body-cell {
-        color: var(--color-mist);
+        @apply px-4 py-3 align-middle text-sm text-foreground;
     }
 
     .divider-y {
-        @apply border-t border-slate-200 dark:border-navy-border;
+        @apply border-t border-separator;
     }
 }
 
 /* ═══════════════════════════════════════════════════════════
-   SweetAlert2 · dark / light / RTL friendly
+   SweetAlert2 · بنفس شكل HeroUI (overlay + accent)
    ═══════════════════════════════════════════════════════════ */
 .swal2-popup {
-    border-radius: 1.25rem !important;
+    border-radius: 1.5rem !important;
     font-family: 'Almarai', ui-sans-serif, system-ui, sans-serif !important;
-    border: 1px solid var(--color-slate-200) !important;
-    background: var(--color-surface) !important;
-    color: var(--color-ink) !important;
-}
-
-.dark .swal2-popup {
-    background: var(--color-navy-surface) !important;
-    color: var(--color-slate-100) !important;
-    border-color: var(--color-navy-border) !important;
+    border: 1px solid var(--border) !important;
+    background: var(--overlay) !important;
+    color: var(--overlay-foreground) !important;
+    box-shadow: var(--overlay-shadow) !important;
 }
 
 .swal2-title {
-    font-weight: 800 !important;
+    font-weight: 700 !important;
     font-size: 1.125rem !important;
     color: inherit !important;
 }
@@ -611,6 +570,7 @@ html[data-role='guest'] {
 .swal2-html-container {
     text-align: start !important;
     font-size: 0.875rem !important;
+    color: var(--muted) !important;
 }
 
 .swal2-icon {
@@ -620,8 +580,8 @@ html[data-role='guest'] {
 .swal2-confirm,
 .swal2-cancel,
 .swal2-deny {
-    min-height: 2.75rem !important;
-    border-radius: 0.75rem !important;
+    min-height: 2.5rem !important;
+    border-radius: 1.5rem !important;
     font-weight: 700 !important;
     font-size: 0.875rem !important;
     box-shadow: none !important;
@@ -629,28 +589,21 @@ html[data-role='guest'] {
 }
 
 .swal2-confirm {
-    background: var(--color-brand-500) !important;
+    background: var(--accent) !important;
+    color: var(--accent-foreground) !important;
 }
 
 .swal2-cancel {
-    background: var(--color-slate-200) !important;
-    color: var(--color-slate-700) !important;
-}
-
-.dark .swal2-cancel {
-    background: var(--color-navy-border) !important;
-    color: var(--color-slate-200) !important;
+    background: var(--default) !important;
+    color: var(--default-foreground) !important;
 }
 
 .swal2-toast {
-    border-radius: 1rem !important;
+    border-radius: 1.25rem !important;
     font-family: 'Almarai', ui-sans-serif, system-ui, sans-serif !important;
-    background: var(--color-surface) !important;
-    box-shadow: 0 18px 40px -20px rgb(15 23 42 / 0.45) !important;
-}
-
-.dark .swal2-toast {
-    background: var(--color-navy-surface) !important;
+    background: var(--overlay) !important;
+    color: var(--overlay-foreground) !important;
+    box-shadow: var(--overlay-shadow) !important;
 }
 
 .swal2-validation-message {
@@ -658,7 +611,7 @@ html[data-role='guest'] {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   Laravel pagination (Tailwind views)
+   Laravel pagination (Tailwind views) · شكل HeroUI
    ═══════════════════════════════════════════════════════════ */
 .pagination {
     @apply flex flex-wrap items-center justify-center gap-2;
@@ -673,29 +626,34 @@ html[data-role='guest'] {
 }
 
 .pagination li > * {
-    @apply inline-flex min-h-10 min-w-10 items-center justify-center rounded-full border border-slate-200 bg-surface px-3 text-sm font-bold transition hover:-translate-y-0.5 dark:border-navy-border dark:bg-navy-surface dark:text-mist dark:hover:border-brand-500/60 dark:hover:bg-brand-500/10;
-    color: var(--color-ink-muted);
-}
-
-.pagination li > *:hover {
-    border-color: var(--accent-from);
-    color: var(--accent-from);
+    @apply inline-flex min-h-9 min-w-9 items-center justify-center rounded-2xl border-0 bg-transparent px-3 text-sm font-bold text-muted transition-colors hover:bg-default hover:text-foreground;
 }
 
 .pagination li > span[aria-current] {
-    @apply border-brand-500 bg-brand-500 text-white hover:bg-brand-600 dark:border-brand-500 dark:bg-brand-500 dark:text-white;
+    @apply bg-accent text-accent-foreground hover:bg-accent-hover hover:text-accent-foreground;
 }
 
 .pagination li > span:not([aria-current]) {
-    @apply border-transparent bg-transparent text-slate-400 dark:text-slate-500;
+    @apply text-muted/50 hover:bg-transparent hover:text-muted/50;
 }
 
 .pagination svg {
     @apply h-4 w-4;
 }
 
-@media (max-width: 640px) {
-    .pagination li > * {
-        @apply min-h-9 min-w-9 px-2 text-xs;
-    }
+/* Welcome / Landing Page */
+.welcome-shell {
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    margin-inline: 0 !important;
+    padding: 0 !important;
+    inset-inline: 0 !important;
+}
+
+.welcome-shell main {
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
 }

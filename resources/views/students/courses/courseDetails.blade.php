@@ -23,7 +23,7 @@
             </div>
 
             <div class="flex w-full items-center gap-3 md:w-auto md:min-w-[250px]">
-                <div class="h-2.5 w-full overflow-hidden rounded-full bg-slate-100 dark:bg-navy-border">
+                <div class="h-2.5 w-full overflow-hidden rounded-full bg-default">
                     <div id="progress-bar"
                         class="h-2.5 rounded-full bg-success-500 transition-all duration-500"
                         style="width: 0%" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"
@@ -60,7 +60,7 @@
                             <i class="fa-solid fa-play-circle text-4xl text-brand-500" aria-hidden="true"></i>
                         </span>
                         <h3 class="mb-2 text-lg font-extrabold text-ink dark:text-white">ابدأ رحلتك التعليمية</h3>
-                        <p class="text-sm text-slate-500 dark:text-slate-400">
+                        <p class="text-sm text-muted">
                             اختر درساً من القائمة الجانبية للبدء في المشاهدة.
                         </p>
                     </div>
@@ -82,7 +82,7 @@
                             <i class="fa-solid fa-lightbulb text-3xl text-brand-600 dark:text-brand-400" aria-hidden="true"></i>
                         </span>
                         <h2 id="quiz-title" class="mb-3 text-2xl font-extrabold text-ink dark:text-white"></h2>
-                        <p class="mb-6 text-sm text-slate-500 dark:text-slate-400">
+                        <p class="mb-6 text-sm text-muted">
                             هذا الاختبار مصمم لقياس استيعابك للمفاهيم التي تم تغطيتها في هذا القسم.
                         </p>
                         <div id="quiz-content-preview"
@@ -91,7 +91,7 @@
                     </div>
 
                     {{-- معلومات الدرس الحالي --}}
-                    <div class="border-t border-slate-200 bg-canvas p-6 dark:border-navy-border dark:bg-navy/30">
+                    <div class="border-t border-separator bg-canvas p-6 dark:border-navy-border dark:bg-navy/30">
                         <div
                             class="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
                             <div class="min-w-0">
@@ -102,7 +102,7 @@
                                         مرحباً بك في لوحة التعلم
                                     @endif
                                 </h3>
-                                <p id="active-lesson-meta" class="mt-1 text-xs text-slate-500 dark:text-slate-400">
+                                <p id="active-lesson-meta" class="mt-1 text-xs text-muted">
                                     @if ($lesson)
                                         نوع المحتوى:
                                         {{ $lesson->type === 'video' ? 'فيديو شروحات' : ($lesson->type === 'article' ? 'قراءة ومقالة' : 'اختبار قصير') }}
@@ -144,7 +144,7 @@
                                     aria-expanded="true" aria-controls="sec-{{ $section->id }}"
                                     class="flex w-full items-center justify-between gap-3 bg-canvas/60 p-4 text-start transition hover:bg-brand-50/50 dark:bg-navy/20 dark:hover:bg-brand-500/5">
                                     <div class="min-w-0">
-                                        <span class="text-xs font-bold text-slate-500 dark:text-slate-400">
+                                        <span class="text-xs font-bold text-muted">
                                             قسم {{ $sectionIndex + 1 }}
                                         </span>
                                         <h4 class="truncate text-sm font-extrabold text-ink dark:text-white">
@@ -179,7 +179,7 @@
                                                 ])>
                                                 <span class="flex min-w-0 items-center gap-3">
                                                     <span
-                                                        class="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-slate-500 transition group-hover:bg-brand-100 group-hover:text-brand-600 dark:bg-navy dark:text-slate-400">
+                                                        class="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-default text-slate-500 transition group-hover:bg-brand-100 group-hover:text-brand-600 dark:bg-navy dark:text-slate-400">
                                                         <i class="fa-solid {{ $lessonIcons[$lessonItem->type] ?? 'fa-file-lines' }} text-[10px]"
                                                             aria-hidden="true"></i>
                                                     </span>
@@ -188,7 +188,7 @@
                                                             class="block truncate font-bold text-ink transition group-hover:text-brand-700 dark:text-white dark:group-hover:text-brand-300">
                                                             {{ $lessonItem->title }}
                                                         </span>
-                                                        <span class="mt-0.5 block text-[10px] text-slate-400 dark:text-slate-500">
+                                                        <span class="mt-0.5 block text-[10px] text-muted">
                                                             @if ($lessonItem->type === 'video')
                                                                 فيديو • {{ $lessonItem->video_duration ?? 0 }} دقيقة
                                                             @elseif ($lessonItem->type === 'article')
@@ -210,7 +210,7 @@
                                                 </span>
                                             </button>
                                         @empty
-                                            <p class="py-4 text-center text-[11px] font-bold text-slate-400 dark:text-slate-500">
+                                            <p class="py-4 text-center text-[11px] font-bold text-muted">
                                                 لا توجد دروس في هذا السيكشن حالياً.
                                             </p>
                                         @endforelse

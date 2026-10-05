@@ -22,15 +22,15 @@
                         <x-badge variant="success" icon="fa-solid fa-circle-check">حساب نشط</x-badge>
                     </div>
 
-                    <div class="mt-5 space-y-2 border-t border-slate-200 pt-4 text-start text-xs dark:border-navy-border">
+                    <div class="mt-5 space-y-2 border-t border-separator pt-4 text-start text-xs dark:border-navy-border">
                         <div class="flex items-center justify-between gap-2">
-                            <span class="text-slate-500 dark:text-slate-400">الصلاحية:</span>
+                            <span class="text-muted">الصلاحية:</span>
                             <x-badge variant="brand">
                                 {{ auth()->user()->role == 'instructor' ? 'مدرب معتمد' : 'طالب مميز' }}
                             </x-badge>
                         </div>
                         <div class="flex items-center justify-between gap-2">
-                            <span class="text-slate-500 dark:text-slate-400">تاريخ الإنضمام:</span>
+                            <span class="text-muted">تاريخ الإنضمام:</span>
                             <span class="font-extrabold" dir="ltr">{{ auth()->user()->created_at->format('Y-m-d') }}</span>
                         </div>
                     </div>
@@ -44,7 +44,7 @@
                         @csrf
                         @method('PUT')
 
-                        <div class="flex flex-col items-start gap-6 border-b border-slate-200 pb-6 md:flex-row md:items-center md:justify-between dark:border-navy-border">
+                        <div class="flex flex-col items-start gap-6 border-b border-separator pb-6 md:flex-row md:items-center md:justify-between dark:border-navy-border">
                             <div class="flex flex-col items-center gap-4 md:flex-row">
                                 <label for="avatarInput" class="group relative block cursor-pointer">
                                     <img data-avatar-preview
@@ -64,8 +64,8 @@
                                 </label>
 
                                 <div class="text-center md:text-start">
-                                    <p class="text-xs font-extrabold text-slate-500 dark:text-slate-400">الصورة الشخصية</p>
-                                    <p class="mt-1 text-xs text-slate-400 dark:text-slate-500">
+                                    <p class="text-xs font-extrabold text-muted">الصورة الشخصية</p>
+                                    <p class="mt-1 text-xs text-muted">
                                         اضغط على الصورة لاختيار صورة جديدة (JPG أو PNG).
                                     </p>
                                 </div>
@@ -129,7 +129,7 @@
                             </span>
                             <div>
                                 <h3 class="text-lg font-extrabold text-ink dark:text-white">الأمان وكلمة المرور</h3>
-                                <p class="text-sm text-slate-400 dark:text-slate-500">آخر تحديث منذ شهرين</p>
+                                <p class="text-sm text-muted">آخر تحديث منذ شهرين</p>
                             </div>
                         </div>
 
@@ -137,7 +137,7 @@
                             icon="fa-solid fa-key">تغيير كلمة السر</x-button>
                     </div>
 
-                    <form data-password-form class="mt-8 hidden border-t border-slate-200 pt-8 dark:border-navy-border"
+                    <form data-password-form class="mt-8 hidden border-t border-separator pt-8 dark:border-navy-border"
                         action="{{ route('password.update.custom') }}" method="POST">
                         @csrf
                         @method('PUT')

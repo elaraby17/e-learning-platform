@@ -27,7 +27,7 @@
                     </span>
                 </h1>
 
-                <p class="max-w-md text-lg leading-relaxed text-slate-500 dark:text-slate-400">
+                <p class="max-w-md text-lg leading-relaxed text-muted">
                     انضم إلى منصتنا التعليمية اليوم واحصل على وصول غير محدود لأفضل الدورات التدريبية المقدمة من نخبة من
                     المحاضرين.
                 </p>
@@ -40,7 +40,7 @@
                     <a href="#courses"
                         class="inline-flex items-center gap-2 font-bold text-slate-600 transition hover:text-brand-600 dark:text-slate-300 dark:hover:text-brand-300">
                         <span
-                            class="flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-surface shadow-sm dark:border-navy-border dark:bg-navy-surface">
+                            class="flex h-10 w-10 items-center justify-center rounded-full border border-separator bg-surface shadow-sm dark:border-navy-border dark:bg-navy-surface">
                             <i class="fa-solid fa-play text-xs" aria-hidden="true"></i>
                         </span>
                         اكتشف الدورات
@@ -48,20 +48,20 @@
                 </div>
 
                 <div
-                    class="flex items-center justify-end gap-6 border-t border-slate-200 pt-4 dark:border-navy-border">
+                    class="flex items-center justify-end gap-6 border-t border-separator pt-4 dark:border-navy-border">
                     <div class="text-center">
                         <p class="text-2xl font-extrabold text-ink dark:text-white">+10k</p>
-                        <p class="text-xs font-bold text-slate-400 dark:text-slate-500">طالب نشط</p>
+                        <p class="text-xs font-bold text-muted">طالب نشط</p>
                     </div>
-                    <span class="h-10 w-px bg-slate-200 dark:bg-navy-border"></span>
+                    <span class="h-10 w-px bg-default"></span>
                     <div class="text-center">
                         <p class="text-2xl font-extrabold text-ink dark:text-white">+500</p>
-                        <p class="text-xs font-bold text-slate-400 dark:text-slate-500">دورة تدريبية</p>
+                        <p class="text-xs font-bold text-muted">دورة تدريبية</p>
                     </div>
-                    <span class="h-10 w-px bg-slate-200 dark:bg-navy-border"></span>
+                    <span class="h-10 w-px bg-default"></span>
                     <div class="text-center">
                         <p class="text-2xl font-extrabold text-ink dark:text-white">98%</p>
-                        <p class="text-xs font-bold text-slate-400 dark:text-slate-500">نسبة رضا</p>
+                        <p class="text-xs font-bold text-muted">نسبة رضا</p>
                     </div>
                 </div>
             </div>
@@ -71,7 +71,7 @@
                 <div class="relative w-full max-w-md">
                     <div class="surface-card p-8">
                         <div class="mb-6 flex items-center justify-between">
-                            <span class="text-xs font-bold text-slate-400 dark:text-slate-500">دورة Laravel المتقدمة</span>
+                            <span class="text-xs font-bold text-muted">دورة Laravel المتقدمة</span>
                             <x-badge variant="success" dot>مباشر الآن</x-badge>
                         </div>
 
@@ -92,7 +92,7 @@
                                 <span class="font-extrabold text-ink dark:text-white">تقدمك في الدورة</span>
                                 <span class="font-extrabold text-brand-600 dark:text-brand-400">72%</span>
                             </div>
-                            <div class="h-2.5 w-full overflow-hidden rounded-full bg-slate-100 dark:bg-navy-border">
+                            <div class="h-2.5 w-full overflow-hidden rounded-full bg-default">
                                 <div class="h-2.5 rounded-full bg-brand-500" style="width: 72%"
                                     role="progressbar" aria-valuenow="72" aria-valuemin="0" aria-valuemax="100"
                                     aria-label="تقدمك في الدورة"></div>
@@ -106,7 +106,7 @@
                             <i class="fa-solid fa-check text-white" aria-hidden="true"></i>
                         </span>
                         <div>
-                            <p class="text-xs text-slate-400 dark:text-slate-500">تم إكمال</p>
+                            <p class="text-xs text-muted">تم إكمال</p>
                             <p class="text-sm font-extrabold text-ink dark:text-white">كورس البرمجة</p>
                         </div>
                     </div>
@@ -132,7 +132,7 @@
                     لماذا تختار منصتنا؟
                 </span>
                 <h2 class="text-3xl font-extrabold text-ink md:text-4xl dark:text-white">كل ما تحتاجه في مكان واحد</h2>
-                <p class="mt-3 text-lg text-slate-400 dark:text-slate-500">منصة متكاملة صُممت لتجربة تعليمية استثنائية</p>
+                <p class="mt-3 text-lg text-muted">منصة متكاملة صُممت لتجربة تعليمية استثنائية</p>
             </div>
 
             <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
@@ -172,7 +172,7 @@
                                 <i class="{{ $feature['icon'] }} text-2xl" aria-hidden="true"></i>
                             </span>
                             <h3 class="mb-3 text-xl font-extrabold text-ink dark:text-white">{{ $feature['title'] }}</h3>
-                            <p class="leading-relaxed text-slate-400 dark:text-slate-500">{{ $feature['description'] }}</p>
+                            <p class="leading-relaxed text-muted">{{ $feature['description'] }}</p>
                         </div>
                     @endif
                 @endforeach

@@ -29,7 +29,7 @@ class CourseRequest extends FormRequest
             'short_description' => 'nullable|string',
             'category_id' => 'required|exists:categories,id',
 
-            'instructor_id' => ['required', Rule::exists('users', 'id')->whereIn('role', ['instructor', 'admin'])],
+            'instructor_id' => ['nullable', Rule::exists('users', 'id')->whereIn('role', ['instructor', 'admin'])],
 
             'status' => 'required|in:draft,published',
             'price' => 'required|numeric|min:0',

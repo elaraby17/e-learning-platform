@@ -11,30 +11,32 @@
 ])
 
 @php
-    $base = 'inline-flex items-center justify-center gap-2 rounded-xl font-extrabold transition-all duration-200 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60';
-
-    /* primary = تدرّج لون الدور؛ والباقي من نفس الـ palette */
+    /*
+     * HeroUI Button: الكلاس الأساسي `.button` + modifier للنوع (`.button--primary` …).
+     * الألوان بتتحكم فيها متغيرات --button-bg / --button-fg، فالنوع "success"
+     * بنعمله بتغيير المتغيرات دي بس (HeroUI مفيهوش زرار success جاهز).
+     */
     $variants = [
-        'primary' => 'bg-accent-gradient text-white shadow-accent hover:-translate-y-0.5 hover:opacity-95',
-        'secondary' => 'border border-slate-300 bg-surface text-ink transition hover:border-accent hover:bg-canvas hover:text-accent dark:border-navy-border dark:bg-navy-surface dark:text-mist',
-        'danger' => 'bg-rose-500 text-white shadow-brand hover:-translate-y-0.5 hover:bg-rose-600',
-        'success' => 'bg-gradient-to-l from-emerald-500 to-sky-400 text-white shadow-glow-sky hover:-translate-y-0.5 hover:opacity-95',
-        'ghost' => 'text-ink-muted hover:bg-canvas hover:text-accent dark:hover:bg-white/5',
-        'outline-danger' => 'border border-rose-200 text-rose-600 hover:bg-rose-50 dark:border-rose-500/30 dark:text-rose-400 dark:hover:bg-rose-500/10',
+        'primary' => 'button--primary',
+        'secondary' => 'button--secondary',
+        'danger' => 'button--danger',
+        'success' => 'button--primary [--button-bg:var(--success)] [--button-bg-hover:var(--success-hover)] [--button-bg-pressed:var(--success-hover)] [--button-fg:var(--success-foreground)]',
+        'ghost' => 'button--ghost',
+        'outline-danger' => 'button--danger-soft',
     ];
 
-    /* كل المقاسات ≥ 44px ارتفاع للّمس، والمraised ones تبقى متوسطة بصرياً */
     $sizes = [
-        'sm' => 'min-h-10 px-3.5 text-sm',
-        'md' => 'min-h-11 px-4 text-sm',
-        'lg' => 'min-h-12 px-6 text-base',
+        'sm' => 'button--sm',
+        'md' => '',
+        'lg' => 'button--lg',
     ];
 
+    /* font-bold: خط Almarai مفيهوش وزن 500 اللي HeroUI بيستخدمه */
     $attributes = $attributes->class([
-        $base,
+        'button font-bold',
         $variants[$variant] ?? $variants['primary'],
-        $sizes[$size] ?? $sizes['md'],
-        'w-full' => $block,
+        $sizes[$size] ?? '',
+        'button--full-width' => $block,
         'cursor-wait opacity-80' => $loading,
     ]);
 @endphp
@@ -46,7 +48,7 @@
     </a>
 @else
     <button type="{{ $type }}" {{ $attributes }} @disabled($disabled || $loading)
-        @if ($loading) aria-busy="true" @endif>
+        @if ($loading) aria-busy="true" data-pending="true" @endif>
         @if ($loading)
             <i class="fa-solid fa-circle-notch fa-spin" aria-hidden="true"></i>
             {{ $loadingText }}

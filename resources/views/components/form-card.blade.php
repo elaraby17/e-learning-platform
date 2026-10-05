@@ -15,19 +15,19 @@
      لاحظ: وسم <form> و@csrf و@method تبقى في الصفحة نفسها (بدون تغيير). --}}
 <div {{ $attributes->class(['surface-card overflow-hidden']) }}>
     @if ($title || $icon)
-        <div class="flex items-center gap-3 border-b border-slate-200 p-5 dark:border-navy-border">
+        <div class="flex items-center gap-3 border-b border-separator p-5">
             @if ($icon)
-                <span class="icon-box bg-accent-gradient text-white shadow-accent">
+                <span class="icon-box">
                     <i class="{{ $icon }}" aria-hidden="true"></i>
                 </span>
             @endif
 
             <div class="min-w-0">
                 @if ($title)
-                    <h2 class="text-lg font-extrabold text-ink dark:text-mist">{{ $title }}</h2>
+                    <h2 class="text-base font-bold text-foreground">{{ $title }}</h2>
                 @endif
                 @if ($description)
-                    <p class="mt-0.5 text-sm text-ink-muted">{{ $description }}</p>
+                    <p class="mt-0.5 text-sm text-muted">{{ $description }}</p>
                 @endif
             </div>
         </div>

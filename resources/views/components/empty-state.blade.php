@@ -6,20 +6,20 @@
 ])
 
 <div {{ $attributes->class([
-        'flex flex-col items-center justify-center px-6 py-14 text-center',
-        $dashed ? 'rounded-2xl border-2 border-dashed border-slate-200 dark:border-navy-border' : '',
+        'empty-state flex flex-col items-center justify-center px-6 py-14 text-center',
+        $dashed ? 'rounded-3xl border-2 border-dashed border-separator' : '',
     ]) }}>
-    {{-- أيقونة كبيرة داخل دائرة بتدرّج --}}
-    <span class="bg-accent-gradient mb-4 flex size-20 items-center justify-center rounded-full text-white shadow-accent">
-        <i class="{{ $icon }} text-3xl" aria-hidden="true"></i>
+    {{-- أيقونة داخل دائرة soft --}}
+    <span class="mb-4 flex size-16 items-center justify-center rounded-full bg-accent-soft text-accent-soft-foreground">
+        <i class="{{ $icon }} text-2xl" aria-hidden="true"></i>
     </span>
 
     @if ($title)
-        <h3 class="text-lg font-extrabold text-ink dark:text-mist">{{ $title }}</h3>
+        <h3 class="text-lg font-bold text-foreground">{{ $title }}</h3>
     @endif
 
     @if ($description)
-        <p class="mt-2 max-w-sm text-[15px] leading-relaxed text-ink-muted">{{ $description }}</p>
+        <p class="mt-2 max-w-sm text-[15px] leading-relaxed text-muted">{{ $description }}</p>
     @endif
 
     @if (! $slot->isEmpty() || isset($actions))

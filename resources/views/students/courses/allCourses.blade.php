@@ -12,7 +12,7 @@
             @class([
                 'rounded-xl px-5 py-2.5 text-sm font-extrabold transition',
                 'bg-brand-500 text-white shadow-brand' => is_null($category_slug),
-                'border border-slate-200 bg-surface text-slate-600 hover:border-brand-300 hover:text-brand-700 dark:border-navy-border dark:bg-navy-surface dark:text-slate-300' => ! is_null($category_slug),
+                'border border-separator bg-surface text-slate-600 hover:border-brand-300 hover:text-brand-700 dark:border-navy-border dark:bg-navy-surface dark:text-slate-300' => ! is_null($category_slug),
             ])>
             الكل
         </a>
@@ -22,7 +22,7 @@
                 @class([
                     'rounded-xl px-5 py-2.5 text-sm font-extrabold transition',
                     'bg-brand-500 text-white shadow-brand' => $category_slug == $cat->slug,
-                    'border border-slate-200 bg-surface text-slate-600 hover:border-brand-300 hover:text-brand-700 dark:border-navy-border dark:bg-navy-surface dark:text-slate-300' => $category_slug != $cat->slug,
+                    'border border-separator bg-surface text-slate-600 hover:border-brand-300 hover:text-brand-700 dark:border-navy-border dark:bg-navy-surface dark:text-slate-300' => $category_slug != $cat->slug,
                 ])>
                 {{ $cat->name }}
             </a>

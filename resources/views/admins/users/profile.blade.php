@@ -25,13 +25,13 @@
                     @endif
                 </div>
 
-                <p class="mt-4 px-2 text-sm leading-relaxed text-slate-500 dark:text-slate-400">
+                <p class="mt-4 px-2 text-sm leading-relaxed text-muted">
                     {{ $user->bio ?? 'لا توجد نبذة تعريفية مكتوبة حالياً.' }}
                 </p>
 
-                <div class="mt-6 space-y-2 border-t border-slate-200 pt-4 text-start text-xs dark:border-navy-border">
+                <div class="mt-6 space-y-2 border-t border-separator pt-4 text-start text-xs dark:border-navy-border">
                     <div class="flex items-center justify-between gap-2">
-                        <span class="text-slate-500 dark:text-slate-400">حالة الحساب:</span>
+                        <span class="text-muted">حالة الحساب:</span>
                         @if ($user->status == 'active')
                             <x-badge variant="success" dot>نشط</x-badge>
                         @else
@@ -39,11 +39,11 @@
                         @endif
                     </div>
                     <div class="flex items-center justify-between gap-2">
-                        <span class="text-slate-500 dark:text-slate-400">تاريخ الإنضمام:</span>
+                        <span class="text-muted">تاريخ الإنضمام:</span>
                         <span class="font-extrabold" dir="ltr">{{ $user->created_at->format('Y-m-d') }}</span>
                     </div>
                     <div class="flex items-center justify-between gap-2">
-                        <span class="text-slate-500 dark:text-slate-400">البريد الإلكتروني:</span>
+                        <span class="text-muted">البريد الإلكتروني:</span>
                         <span class="truncate font-extrabold" dir="ltr">{{ $user->email }}</span>
                     </div>
                 </div>
@@ -55,7 +55,7 @@
                     @if (isset($user->courses) && $user->courses->count() > 0)
                         @foreach ($user->courses as $course)
                             <div
-                                class="flex items-center justify-between gap-3 rounded-xl border border-slate-200 bg-canvas p-3 dark:border-navy-border dark:bg-navy/40">
+                                class="flex items-center justify-between gap-3 rounded-xl border border-separator bg-canvas p-3 dark:border-navy-border dark:bg-navy/40">
                                 <div class="min-w-0">
                                     <h4 class="line-clamp-1 text-sm font-bold text-ink dark:text-white">
                                         {{ $course->title }}
@@ -107,7 +107,7 @@
                         placeholder="تعديل النبذة الشخصية المكتوبة..." :value="$user->bio" />
                 </div>
 
-                <div class="border-t border-slate-200 pt-5 dark:border-navy-border">
+                <div class="border-t border-separator pt-5 dark:border-navy-border">
                     <h3 class="mb-4 text-sm font-extrabold tracking-wider text-brand-600 uppercase dark:text-brand-400">
                         تغيير كلمة المرور الشخصية
                     </h3>

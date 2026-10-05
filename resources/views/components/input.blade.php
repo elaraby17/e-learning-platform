@@ -32,7 +32,7 @@
 
     <div class="relative">
         @if ($icon)
-            <span class="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-3.5 text-sm text-slate-400 dark:text-slate-500"
+            <span class="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-3.5 text-sm text-muted"
                 aria-hidden="true">
                 <i class="{{ $icon }}"></i>
             </span>
@@ -52,7 +52,7 @@
             ])>
         @if ($suffix)
             <span
-                class="pointer-events-none absolute inset-y-0 end-0 flex items-center pe-3.5 text-xs font-extrabold text-slate-400 dark:text-slate-500"
+                class="pointer-events-none absolute inset-y-0 end-0 flex items-center pe-3.5 text-xs font-extrabold text-muted"
                 aria-hidden="true">{{ $suffix }}</span>
         @endif
     </div>

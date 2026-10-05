@@ -76,4 +76,12 @@ class InstructorCourseService
 
         return $data;
     }
+    // الأدمن يشوف كل الكورسات، المدرس كورساته بس
+public function paginateFor(User $actor, int $perPage = 10)
+{
+    return Course::with('category')
+        ->when($actor->role !== 'admin', fn ($q) => $q->where('instructor_id', $actor->id))
+        ->latest()
+        ->paginate($perPage);
+}
 }

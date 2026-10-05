@@ -7,7 +7,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Student;
 use Illuminate\Support\Facades\Route;
 
-Route::view('/', 'welcome');
+Route::view('/', 'welcome')->name('welcome');
 
 /* ---------- تسجيل الدخول والتسجيل (للزوار بس) ---------- */
 Route::prefix('auth')->name('auth.')->middleware('guest')->group(function () {

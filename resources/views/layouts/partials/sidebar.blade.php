@@ -33,11 +33,11 @@
 
 {{-- ══ Sidebar · desktop (fixed, collapsible) + mobile/tablet (off-canvas drawer) ══ --}}
 <aside id="app-sidebar-drawer"
-    class="app-sidebar fixed inset-y-0 start-0 z-50 flex flex-col border-e border-slate-200 bg-surface shadow-card transition-[width,transform] duration-200 ease-out dark:border-navy-border dark:shadow-none lg:translate-x-0"
+    class="app-sidebar fixed top-[4.5rem] inset-y-0 z-25 flex flex-col border-e border-separator bg-surface shadow-card transition-[width,transform] duration-200 ease-out dark:border-navy-border dark:shadow-none lg:translate-x-0"
     data-sidebar-drawer inert aria-label="القائمة الجانبية">
 
     {{-- Brand --}}
-    <div class="flex h-16 shrink-0 items-center gap-3 border-b border-slate-200 px-4 dark:border-navy-border">
+    <div class="flex h-16 shrink-0 items-center gap-3 border-b border-separator px-4 dark:border-navy-border">
         <a href="{{ $homeUrl }}" class="flex min-w-0 items-center gap-3" aria-label="الصفحة الرئيسية">
             <img src="{{ asset('images/logo.png') }}" alt="شعار المنصة"
                 class="size-10 shrink-0 rounded-xl object-cover shadow-brand">
@@ -58,16 +58,16 @@
     </nav>
 
     {{-- Desktop collapse toggle --}}
-    <div class="hidden shrink-0 border-t border-slate-200 px-3 py-3 lg:block dark:border-navy-border">
+    <div class="hidden shrink-0 border-t border-separator px-3 py-3 lg:block dark:border-navy-border">
         <button type="button" data-sidebar-toggle aria-expanded="true" aria-label="طي القائمة الجانبية"
-            class="flex min-h-11 w-full items-center justify-center gap-2 rounded-xl border border-slate-200 text-ink-muted transition hover:border-accent hover:bg-canvas hover:text-accent dark:border-navy-border dark:hover:bg-brand-500/10">
+            class="flex min-h-11 w-full items-center justify-center gap-2 rounded-xl border border-separator text-ink-muted transition hover:border-accent hover:bg-canvas hover:text-accent dark:border-navy-border dark:hover:bg-brand-500/10">
             <i class="fa-solid fa-angles-right text-base" aria-hidden="true" data-sidebar-toggle-icon></i>
             <span class="sidebar-label text-sm font-bold">طي القائمة</span>
         </button>
     </div>
 
     {{-- User card + logout --}}
-    <div class="shrink-0 border-t border-slate-200 p-3 dark:border-navy-border">
+    <div class="shrink-0 border-t border-separator p-3 dark:border-navy-border">
         <div class="surface-muted flex items-center gap-3 p-2.5">
             <span class="bg-accent-gradient relative flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-xl text-sm font-extrabold text-white">
                 <span class="absolute inset-0 flex items-center justify-center" aria-hidden="true">

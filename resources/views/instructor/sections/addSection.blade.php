@@ -11,14 +11,14 @@
             <x-card :padded="false">
                 {{-- ══ رأس الكورس ══ --}}
                 <div
-                    class="flex flex-col items-start justify-between gap-4 border-b border-slate-200 bg-canvas p-6 sm:flex-row sm:items-center dark:border-navy-border dark:bg-navy/30">
+                    class="flex flex-col items-start justify-between gap-4 border-b border-separator bg-canvas p-6 sm:flex-row sm:items-center dark:border-navy-border dark:bg-navy/30">
                     <div class="min-w-0">
                         <h2 class="flex items-center gap-2 text-xl font-extrabold text-ink dark:text-white">
                             <i class="fa-solid fa-graduation-cap text-brand-500" aria-hidden="true"></i>
                             {{ $course->title }}
                         </h2>
                         @if ($course->description)
-                            <p class="mt-1 max-w-2xl text-sm text-slate-500 dark:text-slate-400">
+                            <p class="mt-1 max-w-2xl text-sm text-muted">
                                 {{ $course->description }}
                             </p>
                         @endif
@@ -36,7 +36,7 @@
                 </div>
 
                 {{-- ══ فورم إضافة سيكشن (مخفي) ══ --}}
-                <div id="section-form-{{ $course->id }}" class="hidden border-b border-slate-200 bg-canvas p-6 dark:border-navy-border dark:bg-navy/20"
+                <div id="section-form-{{ $course->id }}" class="hidden border-b border-separator bg-canvas p-6 dark:border-navy-border dark:bg-navy/20"
                     data-lesson-scope>
                     <form action="{{ route('instructor.sections.store') }}" method="POST">
                         @csrf
@@ -62,7 +62,7 @@
                 {{-- ══ سيكشنز الكورس ══ --}}
                 <div class="space-y-5 p-6">
                     @forelse ($course->sections as $section)
-                        <div class="overflow-hidden rounded-xl border border-slate-200 dark:border-navy-border">
+                        <div class="overflow-hidden rounded-xl border border-separator">
                             {{-- رأس السيكشن --}}
                             <div
                                 class="flex flex-col items-start justify-between gap-3 bg-canvas px-5 py-4 sm:flex-row sm:items-center dark:bg-navy/30">
@@ -72,7 +72,7 @@
                                         {{ $section->title }}
                                     </h3>
                                     @if ($section->description)
-                                        <p class="mt-1 max-w-xl truncate text-xs text-slate-500 dark:text-slate-400">
+                                        <p class="mt-1 max-w-xl truncate text-xs text-muted">
                                             {{ $section->description }}
                                         </p>
                                     @endif
@@ -107,7 +107,7 @@
 
                             {{-- فورم إضافة درس (مخفي) --}}
                             <div id="lesson-row-{{ $section->id }}"
-                                class="hidden border-t border-slate-200 bg-canvas/60 dark:border-navy-border dark:bg-navy/10"
+                                class="hidden border-t border-separator bg-canvas/60 dark:border-navy-border dark:bg-navy/10"
                                 data-lesson-scope>
                                 <div class="p-5">
                                     <div class="mb-4 flex items-center gap-2">
@@ -156,7 +156,7 @@
                                             <input type="checkbox" name="is_free_preview" value="1" class="peer sr-only">
 
                                             <span
-                                                class="relative h-6 w-11 shrink-0 rounded-full bg-slate-200 transition peer-checked:bg-success-500 dark:bg-navy-border dark:peer-checked:bg-success-500 peer-focus-visible:ring-2 peer-focus-visible:ring-brand-500/50 after:absolute after:start-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-slate-300 after:bg-white after:transition-all after:content-[''] peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full dark:after:border-navy-border"></span>
+                                                class="relative h-6 w-11 shrink-0 rounded-full bg-default transition peer-checked:bg-success-500 dark:bg-navy-border dark:peer-checked:bg-success-500 peer-focus-visible:ring-2 peer-focus-visible:ring-brand-500/50 after:absolute after:start-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-slate-300 after:bg-white after:transition-all after:content-[''] peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full dark:after:border-navy-border"></span>
 
                                             <span class="text-xs font-bold text-slate-600 dark:text-slate-300">
                                                 إتاحة كمعاينة مجانية (Free Preview)
@@ -174,7 +174,7 @@
                             </div>
 
                             {{-- قائمة دروس السيكشن --}}
-                            <div class="divide-y divide-slate-100 dark:divide-navy-border/70">
+                            <div class="divide-y divide-separator">
                                 @forelse ($section->lessons as $lesson)
                                     @php
                                         [$typeIcon, $typeClass] = match ($lesson->type) {
@@ -188,11 +188,11 @@
                                         class="flex flex-wrap items-center justify-between gap-3 px-5 py-3 transition-colors hover:bg-brand-50/40 dark:hover:bg-brand-500/5">
                                         <div class="flex min-w-0 items-center gap-3">
                                             <i class="{{ $typeIcon }} shrink-0 text-sm {{ $typeClass }}" aria-hidden="true"></i>
-                                            <span class="shrink-0 text-xs text-slate-400 dark:text-slate-500">#{{ $lesson->order_number }}</span>
+                                            <span class="shrink-0 text-xs text-muted">#{{ $lesson->order_number }}</span>
                                             <span class="truncate text-sm font-bold text-ink dark:text-white">{{ $lesson->title }}</span>
 
                                             @if ($lesson->type === 'video' && $lesson->video_duration)
-                                                <span class="shrink-0 text-[11px] text-slate-400 dark:text-slate-500">
+                                                <span class="shrink-0 text-[11px] text-muted">
                                                     ({{ $lesson->video_duration }} د)
                                                 </span>
                                             @endif
@@ -222,14 +222,14 @@
                                         </div>
                                     </div>
                                 @empty
-                                    <p class="px-5 py-4 text-center text-xs font-bold text-slate-400 dark:text-slate-500">
+                                    <p class="px-5 py-4 text-center text-xs font-bold text-muted">
                                         لا توجد دروس في هذا السيكشن بعد.
                                     </p>
                                 @endforelse
                             </div>
                         </div>
                     @empty
-                        <p class="py-6 text-center text-sm font-bold text-slate-400 dark:text-slate-500">
+                        <p class="py-6 text-center text-sm font-bold text-muted">
                             لا توجد سيكشنز في هذا الكورس بعد. اضغط "سيكشن جديد" فوق عشان تضيف أول سيكشن.
                         </p>
                     @endforelse

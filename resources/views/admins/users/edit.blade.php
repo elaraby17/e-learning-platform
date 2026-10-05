@@ -41,7 +41,7 @@
                         <input type="file" name="image" id="image" accept="image/*" class="sr-only">
                     </label>
 
-                    <p class="mt-3 text-xs font-bold text-slate-500 dark:text-slate-400">JPG أو PNG — حتى 2 ميجابايت</p>
+                    <p class="mt-3 text-xs font-bold text-muted">JPG أو PNG — حتى 2 ميجابايت</p>
 
                     @error('image')
                         <p class="form-error justify-center">

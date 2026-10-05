@@ -3,12 +3,12 @@
 @section('title', 'تسجيل الدخول')
 
 @section('content')
-    <div class="mx-auto grid max-w-5xl grid-cols-1 items-stretch overflow-hidden rounded-3xl border border-slate-200 bg-surface shadow-card-lg md:grid-cols-2 dark:border-navy-border dark:bg-navy-surface">
+    <div class="mx-auto grid max-w-5xl grid-cols-1 items-stretch overflow-hidden rounded-3xl border border-separator bg-surface shadow-card-lg md:grid-cols-2 dark:border-navy-border dark:bg-navy-surface">
         {{-- ══ النموذج ══ --}}
         <div class="p-8 sm:p-10 md:p-12">
             <p class="mb-2 text-xs font-extrabold tracking-widest text-brand-500 uppercase">مرحباً بعودتك</p>
             <h1 class="text-2xl font-extrabold text-ink sm:text-3xl dark:text-white">تسجيل الدخول</h1>
-            <p class="mt-2 text-sm text-slate-400 dark:text-slate-500">أدخل بياناتك للوصول لحسابك</p>
+            <p class="mt-2 text-sm text-muted">أدخل بياناتك للوصول لحسابك</p>
 
             <form action="{{ route('auth.signin') }}" method="POST" class="mt-8 space-y-5">
                 @csrf
@@ -19,7 +19,7 @@
                 <div>
                     <div class="mb-1.5 flex items-center justify-between">
                         <label for="password" class="form-label mb-0">كلمة المرور</label>
-                        <span class="text-xs font-bold text-slate-400 dark:text-slate-500"
+                        <span class="text-xs font-bold text-muted"
                             title="ميزة استرجاع كلمة المرور غير متاحة حالياً">نسيت كلمة المرور؟</span>
                     </div>
 
@@ -28,7 +28,7 @@
                 </div>
 
                 <label class="flex cursor-pointer items-center justify-end gap-2">
-                    <span class="text-sm font-bold text-slate-500 dark:text-slate-400">تذكرني</span>
+                    <span class="text-sm font-bold text-muted">تذكرني</span>
                     <input type="checkbox" name="remember" value="1"
                         class="h-4 w-4 cursor-pointer rounded accent-brand-500">
                 </label>
@@ -36,12 +36,12 @@
                 <x-button type="submit" size="lg" block>دخول إلى حسابي</x-button>
 
                 <div class="flex items-center gap-4">
-                    <span class="h-px flex-1 bg-slate-200 dark:bg-navy-border"></span>
+                    <span class="h-px flex-1 bg-default"></span>
                     <span class="text-xs font-bold text-slate-300 dark:text-slate-600">أو</span>
-                    <span class="h-px flex-1 bg-slate-200 dark:bg-navy-border"></span>
+                    <span class="h-px flex-1 bg-default"></span>
                 </div>
 
-                <p class="text-center text-sm text-slate-400 dark:text-slate-500">
+                <p class="text-center text-sm text-muted">
                     ليس لديك حساب؟
                     <a href="{{ route('auth.register') }}"
                         class="font-extrabold text-brand-600 hover:underline dark:text-brand-400">سجل الآن مجاناً</a>

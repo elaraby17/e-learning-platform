@@ -59,7 +59,7 @@
                         </div>
                     </td>
                     <td class="table-body-cell">
-                        <span class="line-clamp-2 text-slate-500 dark:text-slate-400">
+                        <span class="line-clamp-2 text-muted">
                             {{ $item->description ?? 'لا يوجد وصف حالياً' }}
                         </span>
                     </td>

@@ -3,7 +3,7 @@
 @section('title', 'إنشاء حساب')
 
 @section('content')
-    <div class="mx-auto grid max-w-5xl grid-cols-1 items-stretch overflow-hidden rounded-3xl border border-slate-200 bg-surface shadow-card-lg md:grid-cols-5 dark:border-navy-border dark:bg-navy-surface">
+    <div class="mx-auto grid max-w-5xl grid-cols-1 items-stretch overflow-hidden rounded-3xl border border-separator bg-surface shadow-card-lg md:grid-cols-5 dark:border-navy-border dark:bg-navy-surface">
         <div data-register-steps data-step="1" class="md:col-span-3">
             <div class="p-8 sm:p-10 md:p-12">
                 <p class="mb-2 text-xs font-extrabold tracking-widest text-brand-500 uppercase">انضم إلينا مجاناً</p>
@@ -13,12 +13,12 @@
                 <div class="my-8 flex items-center gap-3" role="group" aria-label="خطوات التسجيل">
                     <span data-step-dot="1"
                         class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand-500 text-xs font-extrabold text-white transition">1</span>
-                    <span data-step-line class="h-1 flex-1 rounded-full bg-slate-100 transition dark:bg-navy"></span>
+                    <span data-step-line class="h-1 flex-1 rounded-full bg-default transition dark:bg-navy"></span>
                     <span data-step-dot="2"
-                        class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-slate-100 text-xs font-extrabold text-slate-400 transition dark:bg-navy dark:text-slate-500">2</span>
-                    <span data-step-line class="h-1 flex-1 rounded-full bg-slate-100 transition dark:bg-navy"></span>
+                        class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-default text-xs font-extrabold text-slate-400 transition dark:bg-navy dark:text-slate-500">2</span>
+                    <span data-step-line class="h-1 flex-1 rounded-full bg-default transition dark:bg-navy"></span>
                     <span data-step-dot="3"
-                        class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-slate-100 text-xs font-extrabold text-slate-400 transition dark:bg-navy dark:text-slate-500">3</span>
+                        class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-default text-xs font-extrabold text-slate-400 transition dark:bg-navy dark:text-slate-500">3</span>
                 </div>
 
                 <form action="{{ route('auth.signup') }}" method="POST" enctype="multipart/form-data">
@@ -31,7 +31,7 @@
                                 الخطوة 1 من 3
                             </p>
                             <h2 class="text-xl font-extrabold text-ink dark:text-white">البيانات الشخصية</h2>
-                            <p class="mt-1 text-sm text-slate-400 dark:text-slate-500">أدخل معلوماتك الأساسية للبدء</p>
+                            <p class="mt-1 text-sm text-muted">أدخل معلوماتك الأساسية للبدء</p>
                         </div>
 
                         <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -58,7 +58,7 @@
                                 الخطوة 2 من 3
                             </p>
                             <h2 class="text-xl font-extrabold text-ink dark:text-white">عن نفسك</h2>
-                            <p class="mt-1 text-sm text-slate-400 dark:text-slate-500">أخبرنا أكثر عن شخصيتك</p>
+                            <p class="mt-1 text-sm text-muted">أخبرنا أكثر عن شخصيتك</p>
                         </div>
 
                         <x-radio-group name="gender" label="النوع" :options="['male' => 'ذكر', 'female' => 'أنثى']" />
@@ -88,7 +88,7 @@
                                 الخطوة 3 من 3
                             </p>
                             <h2 class="text-xl font-extrabold text-ink dark:text-white">تأمين الحساب</h2>
-                            <p class="mt-1 text-sm text-slate-400 dark:text-slate-500">
+                            <p class="mt-1 text-sm text-muted">
                                 اختر كلمة مرور قوية لحماية حسابك
                             </p>
                         </div>
@@ -117,7 +117,7 @@
                     </div>
                 </form>
 
-                <p class="mt-6 text-center text-sm text-slate-400 dark:text-slate-500">
+                <p class="mt-6 text-center text-sm text-muted">
                     لديك حساب بالفعل؟
                     <a href="{{ route('auth.login') }}"
                         class="font-extrabold text-brand-600 hover:underline dark:text-brand-400">تسجيل الدخول</a>
@@ -163,7 +163,7 @@
                             </span>
                             <div>
                                 <p class="text-xs font-extrabold text-slate-200">{{ $registerStep['label'] }}</p>
-                                <p class="text-xs text-slate-400 dark:text-slate-500">{{ $registerStep['sub'] }}</p>
+                                <p class="text-xs text-muted">{{ $registerStep['sub'] }}</p>
                             </div>
                         </div>
                     @endforeach
