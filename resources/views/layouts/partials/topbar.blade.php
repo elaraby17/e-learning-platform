@@ -39,6 +39,7 @@
             @endif
 
             {{-- BRAND --}}
+            @if (!$authUser)
             <a href="{{ url('/') }}" class="group flex items-center gap-3 rounded-2xl py-1.5"
                 aria-label="{{ config('app.name', 'DevCraft') }}">
 
@@ -57,6 +58,27 @@
                     </span>
                 </span>
             </a>
+            @else
+            <a href="{{ route('student.home') }}" class="group flex items-center gap-3 rounded-2xl py-1.5"
+                aria-label="{{ config('app.name', 'DevCraft') }}">
+
+                <span
+                    class="bg-accent-gradient relative flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-xl shadow-accent transition duration-300 group-hover:scale-105">
+                    <img src="{{ asset('images/logo.png') }}" alt="شعار المنصة"
+                        class="relative z-10 h-full w-full object-cover">
+                </span>
+
+                <span class="hidden flex-col leading-none sm:flex">
+                    <span class="text-[15px] font-black tracking-tight text-ink dark:text-mist">
+                        {{ config('app.name', 'DevCraft') }}
+                    </span>
+                    <span class="mt-1 text-[9px] font-bold uppercase tracking-[0.18em] text-ink-muted">
+                        E-LEARNING PLATFORM
+                    </span>
+                </span>
+            </a>
+            @endif
+
 
             {{-- THEME TOGGLE --}}
             <button type="button" data-theme-toggle aria-pressed="false" aria-label="تبديل الوضع الداكن"

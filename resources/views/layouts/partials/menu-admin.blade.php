@@ -41,6 +41,13 @@
                     'tone' => 'bg-coral-500/10 text-coral-600 dark:text-coral-300',
                 ],
                 [
+                    'route' => 'admin.users.index',
+                    'pattern' => 'admin.users.*',
+                    'icon' => 'fa-solid fa-users-gear',
+                    'label' => 'المديرين',
+                    'tone' => 'bg-coral-500/10 text-coral-600 dark:text-coral-300',
+                ],
+                [
                     'route' => 'admin.profile.show',
                     'pattern' => 'admin.profile.*',
                     'icon' => 'fa-solid fa-user',

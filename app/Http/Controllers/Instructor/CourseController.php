@@ -12,6 +12,8 @@ class CourseController extends Controller
 {
     public function __construct(private InstructorCourseService $courseService) {}
 
+
+
     public function create()
     {
         $this->authorize('create', Course::class);

@@ -12,15 +12,31 @@ class SectionController extends Controller
 {
     public function __construct(private InstructorSectionService $sectionService) {}
 
-    public function create()
-    {
-        $user = auth()->user();
+  public function create(Request $request)
+{
+    $user = auth()->user();
 
-        return view('instructor.sections.addSection', [
-            'courses'  => $user->courses()->get(),
-            'sections' => $this->sectionService->forInstructor($user),
-        ]);
+    // الكورسات تظهر فقط في الـ select
+    $courses = $user->courses()
+        ->select('courses.id', 'courses.title')
+        ->get();
+
+    // لا يوجد كورس مختار في البداية
+    $selectedCourse = null;
+
+    // لو المستخدم اختار كورس
+    if ($request->filled('course')) {
+        $selectedCourse = $user->courses()
+            ->with(['sections.lessons'])
+            ->where('courses.id', $request->course)
+            ->firstOrFail();
     }
+
+    return view('instructor.sections.addSection', [
+        'courses' => $courses,
+        'selectedCourse' => $selectedCourse,
+    ]);
+}
 
     public function store(Request $request)
     {

@@ -7,7 +7,7 @@ use App\Models\User;
 
 class InstructorSectionService
 {
-    // كل سيكشنات المدرس (with('lessons') عشان منعملش query لكل سيكشن)
+
     public function forInstructor(User $instructor)
     {
         return Section::whereIn('course_id', $instructor->courses()->pluck('id'))
@@ -19,7 +19,7 @@ class InstructorSectionService
 
     public function create(array $data): Section
     {
-        // لو الترتيب مش متحدد، حطه آخر سيكشن في الكورس
+
         if (empty($data['order_number'])) {
             $data['order_number'] = (Section::where('course_id', $data['course_id'])->max('order_number') ?? 0) + 1;
         }
@@ -34,7 +34,7 @@ class InstructorSectionService
         return $section;
     }
 
-    // الدروس بتتحذف لوحدها (cascade في الداتابيز)
+   
     public function delete(Section $section): void
     {
         $section->delete();

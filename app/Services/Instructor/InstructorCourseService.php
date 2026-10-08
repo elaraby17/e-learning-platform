@@ -8,7 +8,6 @@ use App\Models\User;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 
-// المدرس بيدير كورساته (الأدمن بيستخدمها كمان)
 class InstructorCourseService
 {
     public function categories()
@@ -16,8 +15,6 @@ class InstructorCourseService
         return Category::all();
     }
 
-    // قايمة المدربين اللي تظهر في الفورم:
-    // الأدمن يختار أي مدرس - المدرس يشوف نفسه بس
     public function instructorsFor(User $actor)
     {
         if ($actor->role === 'admin') {
@@ -43,7 +40,6 @@ class InstructorCourseService
     {
         $data = $this->handleImage($data, $course->image);
 
-        // المدرس مينفعش يغير صاحب الكورس
         if ($actor->role !== 'admin') {
             unset($data['instructor_id']);
         }
@@ -62,7 +58,7 @@ class InstructorCourseService
         $course->delete();
     }
 
-    // رفع الصورة: لو في صورة جديدة نمسح القديمة ونحفظ الجديدة، غير كده نسيب القديمة
+    // هندل الصوره لو موجوده حطه في مكانها لو مش موجوده امسح القديمه
     private function handleImage(array $data, ?string $oldPath = null): array
     {
         if (($data['image'] ?? null) instanceof UploadedFile) {
@@ -76,12 +72,13 @@ class InstructorCourseService
 
         return $data;
     }
+
     // الأدمن يشوف كل الكورسات، المدرس كورساته بس
-public function paginateFor(User $actor, int $perPage = 10)
-{
-    return Course::with('category')
-        ->when($actor->role !== 'admin', fn ($q) => $q->where('instructor_id', $actor->id))
-        ->latest()
-        ->paginate($perPage);
-}
+    public function paginateFor(User $actor, int $perPage = 10)
+    {
+        return Course::with('category')
+            ->when($actor->role !== 'admin', fn ($q) => $q->where('instructor_id', $actor->id))
+            ->latest()
+            ->paginate($perPage);
+    }
 }

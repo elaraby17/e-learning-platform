@@ -6,7 +6,7 @@ use App\Exceptions\CategoryHasCoursesException;
 use App\Models\Category;
 use Illuminate\Support\Str;
 
-// الأدمن بيدير الأقسام (التصنيفات)
+
 class AdminCategoryService
 {
     public function paginate(int $perPage = 10)

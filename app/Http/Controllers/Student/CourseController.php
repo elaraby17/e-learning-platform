@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Course;
 use App\Services\Student\StudentCourseService;
 
-// الطالب بيتصفح الكورسات ويشوف كورساته ويفتح الكورس
+
 class CourseController extends Controller
 {
     public function __construct(private StudentCourseService $courseService) {}

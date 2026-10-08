@@ -10,7 +10,7 @@ class InstructorLessonService
     {
         $data = $this->prepare($data);
 
-        // لو الترتيب مش متحدد، حطه آخر درس في السيكشن
+
         if (empty($data['order_number'])) {
             $data['order_number'] = (Lesson::where('section_id', $data['section_id'])->max('order_number') ?? 0) + 1;
         }
@@ -30,7 +30,7 @@ class InstructorLessonService
         $lesson->delete();
     }
 
-    // لو الرابط يوتيوب حوله لرابط embed وهات الصورة المصغرة
+
     private function prepare(array $data): array
     {
         if (! empty($data['video_url']) && $videoId = $this->youtubeId($data['video_url'])) {
